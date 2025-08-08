@@ -1,0 +1,7 @@
+{
+  "name": "MyFYP",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
