@@ -1,0 +1,331 @@
+
+<ion-content class="app-content" [fullscreen]="true">
+    
+    <!-- App-style navigation bar -->
+    <div class="nav-bar">
+      <ion-button class="back-btn" (click)="goBack()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </ion-button>
+      <div class="page-title">Booking</div>
+      <div class="spacer"></div>
+      <ion-button class="view-bookings-btn" (click)="showMyBookings()" fill="clear">
+        <ion-icon name="list-outline"></ion-icon>
+        <span>My Bookings</span>
+      </ion-button>
+    </div>
+
+    <!-- Booking Form Section -->
+    <div class="booking-section">
+      <div class="booking-container">
+        <form (ngSubmit)="submitBooking()" #bookingForm="ngForm">
+          
+          <!-- Personal Information Card -->
+          <ion-card class="form-card">
+            <ion-card-header>
+              <ion-icon class="card-icon" name="person-outline"></ion-icon>
+              <ion-card-title>Personal Information</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-item class="form-item">
+                <ion-label position="stacked">Number of Passengers *</ion-label>
+                <ion-input 
+                  type="number" 
+                  [(ngModel)]="bookingData.passengers" 
+                  name="passengers"
+                  placeholder="Enter number of passengers"
+                  min="1"
+                  max="10"
+                  (ionChange)="onPassengerCountChange()"
+                  required>
+                </ion-input>
+              </ion-item>
+
+              <ion-item class="form-item">
+                <ion-label position="stacked">Full Name *</ion-label>
+                <ion-input 
+                  type="text" 
+                  [(ngModel)]="bookingData.name" 
+                  name="name"
+                  placeholder="Enter your full name"
+                  required>
+                </ion-input>
+              </ion-item>
+
+              <ion-item class="form-item">
+                <ion-label position="stacked">Identity Card Number *</ion-label>
+                <ion-input 
+                  type="text" 
+                  [(ngModel)]="bookingData.identityCard" 
+                  name="identityCard"
+                  placeholder="Enter your identity card number"
+                  required>
+                </ion-input>
+              </ion-item>
+
+              <ion-item class="form-item">
+                <ion-label position="stacked">Birth Date *</ion-label>
+                <ion-input 
+                  type="date"
+                  [(ngModel)]="bookingData.birthDate" 
+                  name="birthDate"
+                  max="2006-12-31"
+                  required>
+                </ion-input>
+              </ion-item>
+
+              <ion-item class="form-item">
+                <ion-label position="stacked">Home Place *</ion-label>
+                <ion-input 
+                  type="text" 
+                  [(ngModel)]="bookingData.homePlace" 
+                  name="homePlace"
+                  placeholder="Enter your home place"
+                  required>
+                </ion-input>
+              </ion-item>
+
+              <ion-item class="form-item">
+                <ion-label position="stacked">Nationality *</ion-label>
+                <ion-input 
+                  type="text" 
+                  [(ngModel)]="bookingData.nationality" 
+                  name="nationality"
+                  placeholder="Enter your nationality"
+                  required>
+                </ion-input>
+              </ion-item>
+
+              <ion-item class="form-item">
+                <ion-label position="stacked">Relationship *</ion-label>
+                <ion-select 
+                  [(ngModel)]="bookingData.relationship" 
+                  name="relationship"
+                  placeholder="Select relationship"
+                  required>
+                  <ion-select-option value="self">Self</ion-select-option>
+                  <ion-select-option value="spouse">Spouse</ion-select-option>
+                  <ion-select-option value="child">Child</ion-select-option>
+                  <ion-select-option value="parent">Parent</ion-select-option>
+                  <ion-select-option value="sibling">Sibling</ion-select-option>
+                  <ion-select-option value="friend">Friend</ion-select-option>
+                  <ion-select-option value="other">Other</ion-select-option>
+                </ion-select>
+              </ion-item>
+
+              <ion-item class="form-item">
+                <ion-label position="stacked">Phone Number</ion-label>
+                <ion-input 
+                  type="tel" 
+                  [(ngModel)]="bookingData.phone" 
+                  name="phone"
+                  placeholder="Enter your phone number">
+                </ion-input>
+              </ion-item>
+            </ion-card-content>
+          </ion-card>
+
+          <!-- Additional Passenger Cards -->
+          <ion-card class="form-card" *ngFor="let passenger of additionalPassengers; let i = index">
+            <ion-card-header>
+              <ion-icon class="card-icon" name="person-outline"></ion-icon>
+              <ion-card-title>Passenger {{ i + 2 }} Information</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-item class="form-item">
+                <ion-label position="stacked">Full Name *</ion-label>
+                <ion-input 
+                  type="text" 
+                  [(ngModel)]="passenger.name" 
+                  [name]="'passenger' + (i + 2)"
+                  [placeholder]="'Enter full name of passenger ' + (i + 2)"
+                  required>
+                </ion-input>
+              </ion-item>
+
+              <ion-item class="form-item">
+                <ion-label position="stacked">Identity Card Number *</ion-label>
+                <ion-input 
+                  type="text" 
+                  [(ngModel)]="passenger.identityCard" 
+                  [name]="'passenger' + (i + 2) + '_identityCard'"
+                  [placeholder]="'Enter identity card of passenger ' + (i + 2)"
+                  required>
+                </ion-input>
+              </ion-item>
+
+                              <ion-item class="form-item">
+                <ion-label position="stacked">Birth Date *</ion-label>
+                <ion-input 
+                  type="date"
+                  [(ngModel)]="passenger.birthDate" 
+                  [name]="'passenger' + (i + 2) + '_birthDate'"
+                  max="2006-12-31"
+                  required>
+                </ion-input>
+              </ion-item>
+
+              <ion-item class="form-item">
+                <ion-label position="stacked">Home Place *</ion-label>
+                <ion-input 
+                  type="text" 
+                  [(ngModel)]="passenger.homePlace" 
+                  [name]="'passenger' + (i + 2) + '_homePlace'"
+                  [placeholder]="'Enter home place of passenger ' + (i + 2)"
+                  required>
+                </ion-input>
+              </ion-item>
+
+              <ion-item class="form-item">
+                <ion-label position="stacked">Relationship *</ion-label>
+                <ion-select 
+                  [(ngModel)]="passenger.relationship" 
+                  [name]="'passenger' + (i + 2) + '_relationship'"
+                  placeholder="Select relationship"
+                  required>
+                  <ion-select-option value="self">Self</ion-select-option>
+                  <ion-select-option value="spouse">Spouse</ion-select-option>
+                  <ion-select-option value="child">Child</ion-select-option>
+                  <ion-select-option value="parent">Parent</ion-select-option>
+                  <ion-select-option value="sibling">Sibling</ion-select-option>
+                  <ion-select-option value="friend">Friend</ion-select-option>
+                  <ion-select-option value="other">Other</ion-select-option>
+                </ion-select>
+              </ion-item>
+            </ion-card-content>
+          </ion-card>
+
+          <!-- Trip Details Card -->
+          <ion-card class="form-card">
+            <ion-card-header>
+              <ion-icon class="card-icon" name="map-outline"></ion-icon>
+              <ion-card-title>Trip Details</ion-card-title>
+            </ion-card-header>
+
+            <ion-card-content>
+              <ion-item class="form-item">
+                <ion-label position="stacked">From *</ion-label>
+                <ion-select 
+                  [(ngModel)]="bookingData.from" 
+                  name="from"
+                  placeholder="Select departure point"
+                  required>
+                  <ion-select-option value="Serasa Port">Serasa, Brunei Darussalam</ion-select-option>
+                  <ion-select-option value="Labuan Port">Labuan, Malaysia</ion-select-option>
+                </ion-select>
+              </ion-item>
+
+              <ion-item class="form-item">
+                <ion-label position="stacked">To *</ion-label>
+                <ion-select 
+                  [(ngModel)]="bookingData.to" 
+                  name="to"
+                  placeholder="Select destination"
+                  required>
+                  <ion-select-option value="Labuan ">Mainland</ion-select-option>
+                  <ion-select-option value="island">Island</ion-select-option>
+                </ion-select>
+              </ion-item>
+
+              <ion-item class="form-item">
+                <ion-label position="stacked">Travel Date *</ion-label>
+                
+                <ion-input 
+                  type="date"
+                  [(ngModel)]="bookingData.date" 
+                  name="date"
+                  min="2024-01-01"
+                  max="2025-12-31"
+                  required>
+                </ion-input>
+              </ion-item>
+
+              <ion-item class="form-item">
+                <ion-label position="stacked">Preferred Time *</ion-label>
+                
+                <ion-select 
+                  [(ngModel)]="bookingData.time" 
+                  name="time"
+                  placeholder="Select time"
+                  interface="popover"
+                  required>
+                  <ion-select-option value="06:00">6:00 AM</ion-select-option>
+                  <ion-select-option value="08:00">8:00 AM</ion-select-option>
+                  <ion-select-option value="10:00">10:00 AM</ion-select-option>
+                  <ion-select-option value="12:00">12:00 PM</ion-select-option>
+                  <ion-select-option value="14:00">2:00 PM</ion-select-option>
+                  <ion-select-option value="16:00">4:00 PM</ion-select-option>
+                  <ion-select-option value="18:00">6:00 PM</ion-select-option>
+                </ion-select>
+              </ion-item>
+
+              <ion-item class="form-item">
+                <ion-label position="stacked">Special Requirements</ion-label>
+                <ion-textarea 
+                  [(ngModel)]="bookingData.notes" 
+                  name="notes"
+                  placeholder="Any special requirements or notes..."
+                  rows="3">
+                </ion-textarea>
+              </ion-item>
+            </ion-card-content>
+          </ion-card>
+
+          <!-- Submit Button -->
+          <ion-button 
+            type="submit" 
+            expand="block" 
+            class="submit-button"
+            [disabled]="!bookingForm.valid || isSubmitting">
+            <ion-icon name="checkmark-outline" slot="start"></ion-icon>
+            {{ isSubmitting ? 'Submitting...' : 'Book Ticket' }}
+          </ion-button>
+        </form>
+
+        <!-- Booking Summary Card -->
+        <ion-card class="summary-card" *ngIf="bookingData.name || bookingData.from">
+          <ion-card-header>
+            <ion-icon class="card-icon" name="receipt-outline"></ion-icon>
+            <ion-card-title>Booking Summary</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="summary-item" *ngIf="bookingData.name">
+              <span class="summary-label">Name:</span>
+              <span class="summary-value">{{ bookingData.name }}</span>
+            </div>
+            <div class="summary-item" *ngIf="bookingData.identityCard">
+              <span class="summary-label">Identity Card:</span>
+              <span class="summary-value">{{ bookingData.identityCard }}</span>
+            </div>
+            <div class="summary-item" *ngIf="bookingData.birthDate">
+              <span class="summary-label">Birth Date:</span>
+              <span class="summary-value">{{ bookingData.birthDate | date:'mediumDate' }}</span>
+            </div>
+            <div class="summary-item" *ngIf="bookingData.homePlace">
+              <span class="summary-label">Home Place:</span>
+              <span class="summary-value">{{ bookingData.homePlace }}</span>
+            </div>
+            <div class="summary-item" *ngIf="bookingData.relationship">
+              <span class="summary-label">Relationship:</span>
+              <span class="summary-value">{{ getRelationshipName(bookingData.relationship) }}</span>
+            </div>
+            <div class="summary-item" *ngIf="bookingData.from && bookingData.to">
+              <span class="summary-label">Route:</span>
+              <span class="summary-value">{{ getLocationName(bookingData.from) }} → {{ getLocationName(bookingData.to) }}</span>
+            </div>
+            <div class="summary-item" *ngIf="bookingData.date">
+              <span class="summary-label">Date:</span>
+              <span class="summary-value">{{ bookingData.date | date:'mediumDate' }}</span>
+            </div>
+            <div class="summary-item" *ngIf="bookingData.time">
+              <span class="summary-label">Time:</span>
+              <span class="summary-value">{{ getTimeDisplayName(bookingData.time) }}</span>
+            </div>
+            <div class="summary-item" *ngIf="bookingData.passengers">
+              <span class="summary-label">Passengers:</span>
+              <span class="summary-value">{{ bookingData.passengers }}</span>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    </div>
+  </ion-content>

@@ -1,0 +1,399 @@
+// App-style navigation bar (no header elements)
+.nav-bar {
+  display: flex;
+  align-items: center;
+  padding: 16px 20px;
+  background: transparent;
+  position: relative;
+  height: 60px;
+  
+  .back-btn {
+    --color: white;
+    --background: transparent;
+    --border-radius: 50%;
+    --padding-start: 8px;
+    --padding-end: 8px;
+    --padding-top: 8px;
+    --padding-bottom: 8px;
+    position: absolute;
+    left: 20px;
+    z-index: 10;
+    
+    ion-icon {
+      font-size: 24px;
+    }
+  }
+  
+  .page-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: white;
+    margin: 0;
+    text-align: center;
+    flex: 1;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
+  .spacer {
+    width: 40px;
+    visibility: hidden;
+  }
+  
+  .view-bookings-btn {
+    --color: white;
+    --background: transparent;
+    position: absolute;
+    right: 20px;
+    z-index: 10;
+    font-size: 14px;
+    
+    ion-icon {
+      font-size: 18px;
+      margin-right: 4px;
+    }
+  }
+}
+
+// App Content - Unified Background
+.app-content {
+  --background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --padding-start: 0;
+  --padding-end: 0;
+  --padding-top: 0;
+  --padding-bottom: 20px;
+}
+
+// Main App Container
+.app-main {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  padding: 0;
+  padding-bottom: 20px;
+}
+
+// Hero Section - Mobile App Style
+.hero-section {
+  padding: 40px 20px;
+  text-align: center;
+  color: white;
+  position: relative;
+  overflow: hidden;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.1);
+    z-index: 1;
+  }
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.hero-title {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.hero-subtitle {
+  font-size: 16px;
+  margin-bottom: 24px;
+  opacity: 0.9;
+  line-height: 1.4;
+}
+
+// Booking Section
+.booking-section {
+  padding: 0 20px 40px;
+  background: transparent;
+}
+
+.booking-container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+// Form Cards - Modern Mobile App Style
+.form-card {
+  margin: 0 0 20px 0;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  }
+  
+  ion-card-header {
+    text-align: left;
+    padding: 20px 16px 12px;
+    background: rgba(102, 126, 234, 0.1);
+    border-bottom: 1px solid rgba(102, 126, 234, 0.2);
+  }
+  
+  ion-card-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  ion-card-content {
+    padding: 16px;
+    color: #666;
+    line-height: 1.4;
+  }
+}
+
+.card-icon {
+  font-size: 24px;
+  color: #667eea;
+}
+
+// Form Items - Compact spacing
+.form-item {
+  margin-bottom: 12px;
+  --border-radius: 8px;
+  --background: rgba(255, 255, 255, 0.95);
+  --border-color: rgba(102, 126, 234, 0.25);
+  --border-width: 1px;
+  --padding-start: 12px;
+  --padding-end: 12px;
+  --padding-top: 6px;
+  --padding-bottom: 6px;
+  --min-height: 44px;
+
+  ion-label {
+    font-weight: 600;
+    color: #222;
+    margin-bottom: 4px;
+    font-size: 14px;
+  }
+
+  ion-input, ion-select, ion-datetime, ion-textarea {
+    --color: #222;           /* text color to ensure contrast */
+    --placeholder-color: #6b7280;
+    --background: #ffffff;   /* ensure white field with dark text */
+    font-size: 16px;
+  }
+
+  ion-datetime {
+    --color: #222 !important;
+    --background: #ffffff !important;
+    color: #222 !important;
+    background: #ffffff !important;
+    
+    // Force datetime picker text to be dark
+    .datetime-text {
+      color: #222 !important;
+    }
+    
+    // Style the datetime button
+    button {
+      color: #222 !important;
+      background: #ffffff !important;
+    }
+  }
+
+  .input-icon {
+    color: #667eea;
+    margin-right: 8px;
+    font-size: 18px;
+  }
+}
+
+// Passenger Details Section
+.passenger-details {
+  margin-top: 16px;
+  
+  .section-label {
+    font-weight: 600;
+    color: #333;
+    font-size: 16px;
+    margin: 16px 0 8px 0;
+    display: block;
+  }
+  
+  .additional-passengers {
+    margin-top: 16px;
+    
+    .passenger-item {
+      margin-bottom: 12px;
+    }
+  }
+}
+
+// Submit Button
+.submit-button {
+  --background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --color: white;
+  --border-radius: 25px;
+  --padding-start: 32px;
+  --padding-end: 32px;
+  --padding-top: 16px;
+  --padding-bottom: 16px;
+  font-weight: 600;
+  font-size: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  margin: 20px 0;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.25);
+  }
+  
+  &:disabled {
+    --background: #ccc;
+    transform: none;
+    box-shadow: none;
+  }
+  
+  ion-icon {
+    font-size: 18px;
+    margin-right: 8px;
+  }
+}
+
+// Summary Card
+.summary-card {
+  margin: 20px 0 0 0;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  
+  ion-card-header {
+    text-align: left;
+    padding: 20px 16px 12px;
+    background: rgba(76, 175, 80, 0.1);
+    border-bottom: 1px solid rgba(76, 175, 80, 0.2);
+  }
+  
+  ion-card-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  ion-card-content {
+    padding: 16px;
+    color: #666;
+    line-height: 1.4;
+  }
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.summary-label {
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+}
+
+.summary-value {
+  color: #667eea;
+  font-weight: 500;
+  font-size: 14px;
+  text-align: right;
+  max-width: 60%;
+  word-wrap: break-word;
+}
+
+// Animation classes
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-content,
+.form-card,
+.summary-card {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.form-card:nth-child(1) { animation-delay: 0.1s; }
+.form-card:nth-child(2) { animation-delay: 0.2s; }
+.summary-card { animation-delay: 0.3s; }
+
+// Mobile Responsive Design
+@media (max-width: 576px) {
+  .hero-title {
+    font-size: 28px;
+  }
+  
+  .hero-subtitle {
+    font-size: 14px;
+  }
+  
+  .booking-container {
+    padding: 0 10px;
+  }
+  
+  .form-card {
+    margin: 0 0 16px 0;
+  }
+  
+  .submit-button {
+    --padding-start: 24px;
+    --padding-end: 24px;
+    font-size: 14px;
+  }
+}
+
+// Enable smooth scrolling
+.app-content {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+// Simple date input styling - just white background
+ion-input[type="date"] {
+  --background: #ffffff !important;
+  --color: #222 !important;
+  background: #ffffff !important;
+  color: #222 !important;
+}

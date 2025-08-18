@@ -1,0 +1,80 @@
+
+
+<ion-content class="login-container">
+  <!-- Background with gradient -->
+  <div class="background-overlay"></div>
+  
+  <!-- Floating Login Card -->
+  <div class="login-card-container">
+    <div class="login-card">
+      <!-- Logo Section -->
+      <div class="logo-section">
+        <div class="logo-circle">
+          <ion-icon name="boat-outline" class="logo-icon"></ion-icon>
+        </div>
+        <h1 class="app-title">Seabode</h1>
+      </div>
+
+      <!-- Welcome Text -->
+      <div class="welcome-section">
+        <h2 class="welcome-title">Welcome Back</h2>
+        <p class="welcome-subtitle">Sign in to continue your journey</p>
+      </div>
+
+      <!-- Error Message -->
+      <div *ngIf="errorMessage" class="error-message">
+        <ion-icon name="alert-circle-outline" class="error-icon"></ion-icon>
+        <span>{{ errorMessage }}</span>
+      </div>
+
+      <!-- Login Form -->
+      <form (ngSubmit)="onLogin()" #loginForm="ngForm" class="login-form">
+        <div class="form-group">
+          <div class="input-container">
+            <ion-icon name="mail-outline" class="input-icon"></ion-icon>
+            <ion-input 
+              type="email" 
+              name="email" 
+              [(ngModel)]="email" 
+              required 
+              placeholder="Enter your email"
+              class="form-input"
+              [disabled]="isLoading">
+            </ion-input>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="input-container">
+            <ion-icon name="lock-closed-outline" class="input-icon"></ion-icon>
+            <ion-input 
+              type="password" 
+              name="password" 
+              [(ngModel)]="password" 
+              required 
+              placeholder="Enter your password"
+              class="form-input"
+              [disabled]="isLoading">
+            </ion-input>
+          </div>
+        </div>
+
+        <!-- Login Button -->
+        <ion-button 
+          expand="block" 
+          type="submit" 
+          [disabled]="!loginForm.form.valid || isLoading" 
+          class="login-button">
+          <ion-spinner *ngIf="isLoading" name="crescent" class="button-spinner"></ion-spinner>
+          <span *ngIf="!isLoading">Sign In</span>
+          <span *ngIf="isLoading">Signing In...</span>
+        </ion-button>
+      </form>
+
+      <!-- Footer -->
+      <div class="login-footer">
+        <p class="footer-text">Don't have an account? <a href="/signup" class="signup-link">Sign up</a></p>
+      </div>
+    </div>
+  </div>
+</ion-content> 

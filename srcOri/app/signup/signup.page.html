@@ -1,0 +1,133 @@
+
+
+    
+
+<ion-content class="signup-container">
+  <!-- Background with gradient -->
+  <div class="background-overlay"></div>
+  
+  <!-- Floating Signup Card -->
+  <div class="signup-card-container">
+    
+    <div class="signup-card">
+      
+      <!-- Logo Section -->
+      <div class="logo-section">
+        <div class="logo-circle">
+          <ion-icon name="boat-outline" class="logo-icon"></ion-icon>
+        </div>
+        <h1 class="app-title">Seabode</h1>
+      </div>
+
+      <!-- Welcome Text -->
+      <div class="welcome-section">
+        <h2 class="welcome-title">Create Account</h2>
+        <p class="welcome-subtitle">Join us for your ferry adventures</p>
+      </div>
+
+      <!-- Error Message -->
+      <div *ngIf="errorMessage" class="error-message">
+        <ion-icon name="alert-circle-outline" class="error-icon"></ion-icon>
+        <span>{{ errorMessage }}</span>
+      </div>
+
+      <!-- Success Message -->
+      <div *ngIf="successMessage" class="success-message">
+        <ion-icon name="checkmark-circle-outline" class="success-icon"></ion-icon>
+        <span>{{ successMessage }}</span>
+      </div>
+
+      <!-- Signup Form -->
+      <form (ngSubmit)="onSignup()" #signupForm="ngForm" class="signup-form">
+        <div class="form-group">
+          <div class="input-container">
+            <ion-icon name="person-outline" class="input-icon"></ion-icon>
+            <ion-input 
+              type="text" 
+              name="fullName" 
+              [(ngModel)]="fullName" 
+              required 
+              placeholder="Enter your full name"
+              class="form-input"
+              [disabled]="isLoading">
+            </ion-input>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="input-container">
+            <ion-icon name="mail-outline" class="input-icon"></ion-icon>
+            <ion-input 
+              type="email" 
+              name="email" 
+              [(ngModel)]="email" 
+              required 
+              placeholder="Enter your email"
+              class="form-input"
+              [disabled]="isLoading">
+            </ion-input>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="input-container">
+            <ion-icon name="lock-closed-outline" class="input-icon"></ion-icon>
+            <ion-input 
+              type="password" 
+              name="password" 
+              [(ngModel)]="password" 
+              required 
+              placeholder="Create a password"
+              class="form-input"
+              [disabled]="isLoading">
+            </ion-input>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="input-container">
+            <ion-icon name="lock-closed-outline" class="input-icon"></ion-icon>
+            <ion-input 
+              type="password" 
+              name="confirmPassword" 
+              [(ngModel)]="confirmPassword" 
+              required 
+              placeholder="Confirm your password"
+              class="form-input"
+              [disabled]="isLoading">
+            </ion-input>
+          </div>
+        </div>
+
+        <!-- Terms and Conditions -->
+        <div class="terms-section">
+          <ion-checkbox 
+            [(ngModel)]="agreeToTerms" 
+            name="agreeToTerms"
+            class="terms-checkbox">
+          </ion-checkbox>
+          <label class="terms-label">
+            I agree to the <a href="#" class="terms-link">Terms of Service</a> and 
+            <a href="#" class="terms-link">Privacy Policy</a>
+          </label>
+        </div>
+
+        <!-- Signup Button -->
+        <ion-button 
+          expand="block" 
+          type="submit" 
+          [disabled]="!signupForm.form.valid || !agreeToTerms || isLoading" 
+          class="signup-button">
+          <ion-spinner *ngIf="isLoading" name="crescent" class="button-spinner"></ion-spinner>
+          <span *ngIf="!isLoading">Create Account</span>
+          <span *ngIf="isLoading">Creating Account...</span>
+        </ion-button>
+      </form>
+
+      <!-- Footer -->
+      <div class="signup-footer">
+        <p class="footer-text">Already have an account? <a href="/login" class="login-link">Sign in</a></p>
+      </div>
+    </div>
+  </div>
+</ion-content>

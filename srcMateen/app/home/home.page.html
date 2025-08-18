@@ -1,0 +1,225 @@
+
+<ion-content class="app-content">
+  <!-- Main App Content -->
+  <div class="app-main">
+    
+    <!-- USER EXPERIENCE - Personalized Dashboard -->
+    <div *ngIf="currentUser" class="user-dashboard">
+      <!-- Advertisement Carousel -->
+      <div class="advertisement-carousel">
+        <div class="carousel-container">
+          <div class="carousel-slides" #carouselSlides>
+            <div class="carousel-slide active" *ngFor="let ad of advertisements; let i = index" [class.active]="i === currentAdIndex">
+              <div class="ad-content" [style.background-image]="'url(' + ad.backgroundImage + ')'">
+                <div class="ad-overlay"></div>
+                <div class="ad-content-inner">
+                  <div class="ad-image" *ngIf="ad.icon">
+                    <ion-icon [name]="ad.icon"></ion-icon>
+                  </div>
+                  <div class="ad-text">
+                    <h3>{{ ad.title }}</h3>
+                    <p>{{ ad.description }}</p>
+                  </div>
+                  <div class="ad-action">
+                    <ion-button fill="clear" size="small" (click)="onAdClick(ad)">
+                      {{ ad.buttonText }}
+                    </ion-button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="carousel-dots">
+            <span 
+              class="dot" 
+              *ngFor="let ad of advertisements; let i = index" 
+              [class.active]="i === currentAdIndex"
+              (click)="goToSlide(i)">
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- User Welcome Section -->
+      <div class="user-welcome-section">
+        <div class="welcome-message">
+          <h2>Welcome back, {{ currentUser?.displayName || (currentUser && currentUser.email ? currentUser.email.split('@')[0] : 'User') }}!</h2>
+          <p>Ready to explore ferry services today?</p>
+        </div>
+      </div>
+
+      <!-- User Features -->
+      <div class="user-features">
+        <h2>Your Dashboard</h2>
+        <div class="feature-cards">
+          <div class="feature-card">
+            <ion-icon name="calendar-outline"></ion-icon>
+            <h3>Booking</h3>
+            <p>Travel with ease</p>
+          </div>
+          <div class="feature-card">
+            <ion-icon name="notifications-outline"></ion-icon>
+            <h3>Notifications</h3>
+            <p>Get updates about schedule changes and more</p>
+          </div>
+          <div class="feature-card">
+            <ion-icon name="person-outline"></ion-icon>
+            <h3>Profiles</h3>
+            <p>Manage your account</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GUEST EXPERIENCE - Marketing/Welcome Layout -->
+    <div *ngIf="!currentUser" class="guest-experience">
+      <!-- Hero Section for Guests -->
+      <div class="hero-section">
+        <div class="hero-image">
+          <img src="assets/ferry-hero.svg" alt="Ferry">
+        </div>
+        <div class="hero-content">
+          <div class="app-brand">
+            <ion-icon name="boat-outline" class="brand-icon"></ion-icon>
+            <span class="brand-title">ferryBn</span>
+          </div>
+          <h1 class="hero-title">Welcome to ferryBn</h1>
+          <p class="hero-subtitle">Fast, reliable, and comfortable ferry services</p>
+          <div class="guest-cta-buttons">
+            <ion-button class="cta-button primary" routerLink="/login">
+              Sign Up / Login
+            </ion-button>
+            <ion-button class="cta-button secondary" (click)="onViewSchedule()">
+              View Schedules
+            </ion-button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Benefits Section for Guests -->
+      <div class="benefits-section">
+        <h2>Why Join ferryBn?</h2>
+        <div class="benefits-grid">
+          <div class="benefit-item">
+            <ion-icon name="flash-outline"></ion-icon>
+            <h3>Instant Booking</h3>
+            <p>Book your ferry tickets in seconds</p>
+          </div>
+          <div class="benefit-item">
+            <ion-icon name="card-outline"></ion-icon>
+            <h3>Collect points</h3>
+            <p>Enable you to collect points and redeem them for rewards</p>
+          </div>
+          
+         
+        </div>
+      </div>
+    </div>
+
+    <!-- Schedule Section - Shared for both users and guests -->
+    <div class="schedule-section">
+      <h2 class="section-title" [ngClass]="{'user-title': currentUser, 'guest-title': !currentUser}">
+        <span *ngIf="currentUser">Available Routes</span>
+        <span *ngIf="!currentUser">Today's Schedule</span>
+      </h2>
+      <div class="schedule-cards">
+        <ion-card class="schedule-card" (click)="onViewSchedule()">
+          <ion-card-header>
+            <ion-icon class="schedule-icon" name="time-outline"></ion-icon>
+            <ion-card-title>Morning Route</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="schedule-time">06:00 - 08:00</div>
+            <div class="route-info">Mainland → Island</div>
+            <span class="availability available">Available</span>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card class="schedule-card" (click)="onViewSchedule()">
+          <ion-card-header>
+            <ion-icon class="schedule-icon" name="boat-outline"></ion-icon>
+            <ion-card-title>Express Route</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="schedule-time">09:30 - 10:30</div>
+            <div class="route-info">Mainland → Island</div>
+            <span class="availability available">Available</span>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card class="schedule-card" (click)="onViewSchedule()">
+          <ion-card-header>
+            <ion-icon class="schedule-icon" name="sunny-outline"></ion-icon>
+            <ion-card-title>Afternoon Route</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="schedule-time">14:00 - 16:00</div>
+            <div class="route-info">Island → Mainland</div>
+            <span class="availability limited">Limited</span>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card class="schedule-card" (click)="onViewSchedule()">
+          <ion-card-header>
+            <ion-icon class="schedule-icon" name="moon-outline"></ion-icon>
+            <ion-card-title>Evening Route</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="schedule-time">18:00 - 20:00</div>
+            <div class="route-info">Mainland → Island</div>
+            <span class="availability sold">Sold Out</span>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    </div>
+
+    <!-- Actions Section - Different for Users vs Guests -->
+    <div class="actions-section">
+      <!-- User Navigation -->
+      <div class="action-grid" *ngIf="currentUser">
+        <div class="action-item" (click)="onViewSchedule()">
+          <ion-icon name="calendar-outline"></ion-icon>
+          <span>My tickets</span>
+        </div>
+
+        <div class="action-item" (click)="onThemeChange()">
+          <ion-icon name="color-palette-outline"></ion-icon>
+          <span>Profile</span>
+        </div>
+
+        <div class="action-item" (click)="onContactUs()">
+          <ion-icon name="call-outline"></ion-icon>
+          <span>FAQ</span>
+        </div>
+
+        <div class="action-item" (click)="onLogout()">
+          <ion-icon name="log-out-outline"></ion-icon>
+          <span>Logout</span>
+        </div>
+      </div>
+
+      <!-- Guest Navigation -->
+      <div class="action-grid" *ngIf="!currentUser">
+        <div class="action-item" (click)="onViewSchedule()">
+          <ion-icon name="calendar-outline"></ion-icon>
+          <span>Schedule</span>
+        </div>
+
+        <div class="action-item" (click)="onThemeChange()">
+          <ion-icon name="color-palette-outline"></ion-icon>
+          <span>Theme</span>
+        </div>
+
+        <div class="action-item" (click)="onContactUs()">
+          <ion-icon name="call-outline"></ion-icon>
+          <span>Contact</span>
+        </div>
+
+        <div class="action-item" (click)="onAdminLogin()">
+          <ion-icon name="person-circle-outline"></ion-icon>
+          <span>Login</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>
