@@ -1,0 +1,84 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>My Bookings</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="loadBookings()">
+        <ion-icon name="refresh"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="refreshBookings($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <div class="container">
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading-container">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Loading bookings...</p>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading && bookings.length === 0" class="empty-state">
+      <ion-icon name="boat-outline" size="large"></ion-icon>
+      <h3>No Bookings Found</h3>
+      <p>You haven't made any ferry bookings yet.</p>
+      <ion-button fill="outline" routerLink="/booking">
+        <ion-icon name="add" slot="start"></ion-icon>
+        Make Your First Booking
+      </ion-button>
+    </div>
+
+    <!-- Bookings List -->
+    <div *ngIf="!loading && bookings.length > 0">
+      <ion-list>
+        <ion-item *ngFor="let booking of bookings" button (click)="showBookingActions(booking)">
+          <ion-thumbnail slot="start">
+            <ion-icon 
+              [name]="getStatusIcon(booking.status)" 
+              [color]="getStatusColor(booking.status)"
+              size="large">
+            </ion-icon>
+          </ion-thumbnail>
+          
+          <ion-label>
+            <h2>{{ getBookingType(booking) }}</h2>
+            <p>
+              <ion-icon name="location-outline" size="small"></ion-icon>
+              {{ getBookingDetails(booking) }}
+            </p>
+            <p>
+              <ion-icon name="calendar-outline" size="small"></ion-icon>
+              {{ formatDate(booking.createdAt) }}
+            </p>
+            <p>
+              <ion-icon name="card-outline" size="small"></ion-icon>
+              ${{ booking.totalPrice }}
+            </p>
+          </ion-label>
+          
+          <ion-badge 
+            slot="end" 
+            [color]="getStatusColor(booking.status)">
+            {{ booking.status | titlecase }}
+          </ion-badge>
+        </ion-item>
+      </ion-list>
+    </div>
+
+    <!-- Quick Actions -->
+    <div *ngIf="!loading" class="quick-actions">
+      <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+        <ion-fab-button routerLink="/booking">
+          <ion-icon name="add"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
+    </div>
+  </div>
+</ion-content>

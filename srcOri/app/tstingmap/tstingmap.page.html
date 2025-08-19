@@ -1,0 +1,215 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Ferry Booking & Tracker</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="toggleView()" fill="clear">
+        <ion-icon [name]="showTicketView ? 'map-outline' : 'ticket-outline'"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <!-- Ticket View -->
+  <div class="ticket-container" *ngIf="showTicketView">
+    <!-- Ferry Route Selection -->
+    <div class="route-selection-card">
+      <div class="card-header">
+        <ion-icon name="boat-outline"></ion-icon>
+        <h2>Select Your Ferry</h2>
+      </div>
+      
+      <div class="route-options">
+        <div class="route-card" 
+             *ngFor="let route of routes$ | async" 
+             [class.selected]="selectedRoute?.id === route.id"
+             (click)="selectRoute(route)">
+          <div class="route-info">
+            <h3>{{ route.name }}</h3>
+            <div class="route-details">
+              <div class="stops">
+                <span class="departure">{{ route.stops[0].name }}</span>
+                <ion-icon name="arrow-forward-outline"></ion-icon>
+                <span class="arrival">{{ route.stops[route.stops.length - 1].name }}</span>
+              </div>
+              <div class="duration">
+                <ion-icon name="time-outline"></ion-icon>
+                <span>{{ route.duration }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="route-badge" [style.background-color]="route.color">
+            <ion-icon name="checkmark" *ngIf="selectedRoute?.id === route.id"></ion-icon>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ticket Details -->
+    <div class="ticket-card" *ngIf="selectedRoute">
+      <div class="ticket-header">
+        <div class="ticket-logo">
+          <ion-icon name="boat"></ion-icon>
+          <span>SeaBode Ferry</span>
+        </div>
+        <div class="ticket-number">
+          <span>Ticket #{{ ticketNumber }}</span>
+        </div>
+      </div>
+
+      <div class="ticket-body">
+        <div class="journey-details">
+          <div class="departure-section">
+            <div class="location">
+              <h3>{{ selectedRoute.stops[0].name }}</h3>
+              <p>Departure Terminal</p>
+            </div>
+            <div class="time">
+              <h2>{{ departureTime }}</h2>
+              <p>{{ selectedDate | date:'MMM dd, yyyy' }}</p>
+            </div>
+          </div>
+
+          <div class="journey-arrow">
+            <div class="arrow-line"></div>
+            <ion-icon name="boat-outline"></ion-icon>
+            <div class="arrow-line"></div>
+          </div>
+
+          <div class="arrival-section">
+            <div class="location">
+              <h3>{{ selectedRoute.stops[selectedRoute.stops.length - 1].name }}</h3>
+              <p>Arrival Terminal</p>
+            </div>
+            <div class="time">
+              <h2>{{ arrivalTime }}</h2>
+              <p>{{ selectedDate | date:'MMM dd, yyyy' }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="passenger-details">
+          <div class="detail-item">
+            <span class="label">Passengers:</span>
+            <span class="value">{{ passengerCount }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Ferry:</span>
+            <span class="value">{{ assignedFerry?.name || 'TBD' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Duration:</span>
+            <span class="value">{{ selectedRoute.duration }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Price:</span>
+            <span class="value price">₱{{ ticketPrice }}</span>
+          </div>
+        </div>
+
+        <div class="qr-section">
+          <div class="qr-placeholder">
+            <ion-icon name="qr-code-outline"></ion-icon>
+            <p>QR Code will be generated after booking</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="ticket-actions">
+        <ion-button expand="block" color="primary" (click)="proceedToPayment()" [disabled]="!selectedRoute">
+          <ion-icon name="card-outline" slot="start"></ion-icon>
+          Book for ₱{{ ticketPrice }}
+        </ion-button>
+        
+        <ion-button expand="block" fill="outline" color="secondary" (click)="showTicketView = false">
+          <ion-icon name="map-outline" slot="start"></ion-icon>
+          View Live Tracking
+        </ion-button>
+      </div>
+    </div>
+
+    <!-- Passenger Count Selector -->
+    <div class="passenger-selector" *ngIf="selectedRoute">
+      <h3>Number of Passengers</h3>
+      <div class="counter">
+        <ion-button fill="outline" (click)="decreasePassengers()">
+          <ion-icon name="remove-outline"></ion-icon>
+        </ion-button>
+        <span class="count">{{ passengerCount }}</span>
+        <ion-button fill="outline" (click)="increasePassengers()">
+          <ion-icon name="add-outline"></ion-icon>
+        </ion-button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Map View -->
+  <div class="map-container" *ngIf="!showTicketView">
+    <div id="ferry-map" class="map"></div>
+    
+    <!-- Live Tracking Info Panel -->
+    <div class="tracking-info-panel">
+      <div class="panel-header">
+        <h3>Live Ferry Tracking</h3>
+        <ion-button fill="clear" size="small" (click)="showTicketView = true">
+          <ion-icon name="ticket-outline"></ion-icon>
+        </ion-button>
+      </div>
+      
+      <div class="selected-route-info" *ngIf="selectedRoute">
+        <div class="route-banner" [style.border-left-color]="selectedRoute.color">
+          <h4>{{ selectedRoute.name }}</h4>
+          <p>Your selected route</p>
+        </div>
+      </div>
+
+      <div class="ferry-list" *ngIf="ferries$ | async as ferries">
+        <div class="ferry-item" 
+             *ngFor="let ferry of ferries" 
+             [class.highlighted]="ferry.route === selectedRoute?.name"
+             (click)="focusOnFerry(ferry)">
+          <div class="ferry-header">
+            <h4>{{ ferry.name }}</h4>
+            <span class="ferry-status" [class]="ferry.status">{{ ferry.status }}</span>
+          </div>
+          <div class="ferry-details">
+            <div class="detail-row">
+              <ion-icon name="location-outline"></ion-icon>
+              <span>{{ ferry.route }}</span>
+            </div>
+            <div class="detail-row">
+              <ion-icon name="time-outline"></ion-icon>
+              <span>Next: {{ ferry.nextStop }} at {{ ferry.estimatedArrival }}</span>
+            </div>
+            <div class="detail-row">
+              <ion-icon name="people-outline"></ion-icon>
+              <span>{{ ferry.currentPassengers }}/{{ ferry.capacity }} passengers</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Map Controls -->
+    <div class="map-controls">
+      <ion-button class="control-btn" (click)="centerMap()" fill="solid" color="primary">
+        <ion-icon name="locate-outline"></ion-icon>
+      </ion-button>
+      <ion-button class="control-btn" (click)="toggleRoutes()" fill="solid" [color]="showRoutes ? 'success' : 'medium'">
+        <ion-icon name="trail-sign-outline"></ion-icon>
+      </ion-button>
+      <ion-button class="control-btn" (click)="refreshData()" fill="solid" color="tertiary">
+        <ion-icon name="refresh-outline"></ion-icon>
+      </ion-button>
+    </div>
+
+    <!-- Loading Indicator -->
+    <div class="loading-container" *ngIf="isLoading">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Loading ferry data...</p>
+    </div>
+  </div>
+</ion-content>

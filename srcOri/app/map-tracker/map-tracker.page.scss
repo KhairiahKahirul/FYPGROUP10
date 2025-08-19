@@ -1,0 +1,464 @@
+// Main Layout - Fixed Overlapping
+ion-content {
+  --padding-top: 0;
+  --padding-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+// Map Section (Top Half) - No Overlapping
+.map-section {
+  height: 45vh;
+  width: 100%;
+  position: relative;
+  background: #f5f5f5;
+  border-bottom: 3px solid #667eea;
+  flex-shrink: 0;
+}
+
+.map {
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+// Information Section (Bottom Half) - Fixed Position
+.info-section {
+  height: 55vh;
+  width: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 16px;
+  overflow-y: auto;
+  color: white;
+  position: relative;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+// Navigation Controls
+.nav-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  
+  .back-button {
+    --color: rgba(255, 255, 255, 0.9);
+    font-size: 14px;
+    font-weight: 600;
+    
+    ion-icon {
+      font-size: 16px;
+    }
+  }
+  
+  .center-button {
+    --color: rgba(255, 255, 255, 0.9);
+    --border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    
+    ion-icon {
+      font-size: 18px;
+    }
+  }
+}
+
+// Admin Controls Section - Mobile Optimized
+.admin-controls-section {
+  margin-bottom: 12px;
+  
+  .toggle-button {
+    --border-radius: 25px;
+    --height: 52px;
+    font-size: 18px;
+    font-weight: 700;
+    --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    
+    ion-icon {
+      font-size: 20px;
+    }
+  }
+}
+
+// Route Header - Mobile Optimized
+.route-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  
+  .route-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 20px;
+    font-weight: 700;
+    
+    ion-icon {
+      font-size: 22px;
+    }
+  }
+  
+  .live-indicator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 700;
+    background: rgba(76, 175, 80, 0.2);
+    padding: 4px 8px;
+    border-radius: 12px;
+    
+    .pulse {
+      width: 10px;
+      height: 10px;
+      background: #4CAF50;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+  }
+}
+
+// Current Route Display - Mobile Optimized
+.current-route {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.location-card {
+  flex: 1;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 12px;
+  
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    opacity: 0.9;
+    
+    ion-icon {
+      font-size: 16px;
+    }
+  }
+  
+  .location-name {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  
+  .location-country {
+    font-size: 13px;
+    opacity: 0.8;
+    font-weight: 500;
+  }
+}
+
+.route-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 8px 0;
+  
+  .route-line {
+    width: 40px;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 2px;
+  }
+  
+  .ferry-icon {
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 8px;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    
+    ion-icon {
+      font-size: 24px;
+      color: white;
+      
+      &.moving {
+        animation: bounce 1s infinite;
+      }
+    }
+  }
+}
+
+// Travel Statistics - Mobile Optimized
+.travel-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.stat-item {
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 12px;
+  padding: 16px 12px;
+  text-align: center;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  min-height: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  
+  ion-icon {
+    font-size: 24px;
+    margin-bottom: 6px;
+    opacity: 1;
+  }
+  
+  .stat-content {
+    .stat-value {
+      font-size: 16px;
+      font-weight: 800;
+      margin-bottom: 2px;
+      line-height: 1.2;
+    }
+    
+    .stat-label {
+      font-size: 11px;
+      opacity: 0.9;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+    }
+  }
+  
+  // Make the third item span both columns
+  &:nth-child(3) {
+    grid-column: 1 / -1;
+    max-width: 200px;
+    margin: 0 auto;
+  }
+}
+
+// Booking Information Section
+.booking-info {
+  margin-bottom: 16px;
+  
+  .booking-card {
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 16px;
+    padding: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    
+    .booking-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      
+      ion-icon {
+        font-size: 20px;
+        color: #FFD700;
+      }
+      
+      span {
+        font-size: 16px;
+        font-weight: 700;
+        flex: 1;
+      }
+      
+      .status-chip {
+        --border-radius: 12px;
+        font-size: 12px;
+        font-weight: 600;
+        height: 24px;
+      }
+    }
+    
+    .booking-details {
+      .booking-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 6px 0;
+        
+        .label {
+          font-size: 13px;
+          opacity: 0.8;
+          font-weight: 500;
+        }
+        
+        .value {
+          font-size: 14px;
+          font-weight: 600;
+          
+          &.price {
+            color: #4CAF50;
+            font-weight: 700;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Additional Info - Mobile Optimized
+.additional-info {
+  .info-card {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    
+    ion-icon {
+      font-size: 24px;
+      opacity: 1;
+    }
+    
+    .info-text {
+      flex: 1;
+      font-size: 15px;
+      line-height: 1.4;
+      
+      strong {
+        font-weight: 800;
+        font-size: 16px;
+      }
+    }
+  }
+}
+
+// Port Markers - Mobile Optimized
+:global(.port-marker-container) {
+  background: transparent;
+  border: none;
+}
+
+:global(.port-marker) {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  padding: 8px 10px;
+  text-align: center;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+  border: 3px solid #2196F3;
+  
+  &.serasa-marker {
+    border-color: #FFD700;
+    background: rgba(255, 215, 0, 0.9);
+  }
+  
+  &.labuan-marker {
+    border-color: #FF6B35;
+    background: rgba(255, 107, 53, 0.9);
+  }
+  
+  .port-icon {
+    font-size: 20px;
+    margin-bottom: 3px;
+  }
+  
+  .port-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #333;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+  }
+}
+
+// Animations
+@keyframes pulse {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.2);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-3px);
+  }
+  60% {
+    transform: translateY(-2px);
+  }
+}
+
+// Container to prevent overlapping
+.main-container {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100vh !important;
+  overflow: hidden !important;
+}
+
+// Touch-friendly interactions for mobile
+ion-button {
+  --ripple-color: rgba(255, 255, 255, 0.3);
+}
+
+// Larger touch targets for mobile
+.toggle-button {
+  touch-action: manipulation;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+// Better scrolling on mobile
+.info-section {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  scroll-behavior: smooth;
+}
+
+// Prevent zoom on inputs (mobile)
+ion-input, ion-select, ion-button {
+  font-size: 16px !important;
+}
+
+// Ensure sections don't overlap on any device
+@media (max-height: 600px) {
+  .map-section {
+    height: 40vh;
+  }
+  
+  .info-section {
+    height: 60vh;
+  }
+}
+
+@media (max-height: 500px) {
+  .map-section {
+    height: 35vh;
+  }
+  
+  .info-section {
+    height: 65vh;
+  }
+}

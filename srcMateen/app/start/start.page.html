@@ -1,0 +1,63 @@
+<ion-content class="start-container">
+  <!-- Background with gradient -->
+  <div class="background-overlay"></div>
+  
+  <!-- Floating Start Card -->
+  <div class="start-card-container">
+    <div class="start-card">
+      <!-- Logo Section -->
+      <div class="logo-section">
+        <div class="logo-circle">
+          <ion-icon name="rocket-outline" class="logo-icon"></ion-icon>
+        </div>
+        <h1 class="app-title">Get Started</h1>
+      </div>
+
+      <!-- Welcome Text -->
+      <div class="welcome-section">
+        <h2 class="welcome-title">Welcome to Seabode</h2>
+        <p class="welcome-subtitle">Your ferry booking journey begins here</p>
+      </div>
+
+      <!-- Start Content -->
+      <div class="start-content">
+        <div class="feature-item">
+          <ion-icon name="boat-outline" class="feature-icon"></ion-icon>
+          <div class="feature-info">
+            <h3>Book Ferry Tickets</h3>
+            <p>Easily book your ferry rides with just a few taps</p>
+          </div>
+        </div>
+
+        <div class="feature-item">
+          <ion-icon name="time-outline" class="feature-icon"></ion-icon>
+          <div class="feature-info">
+            <h3>Real-time Schedules</h3>
+            <p>Get up-to-date ferry schedules and availability</p>
+          </div>
+        </div>
+
+        <div class="feature-item">
+          <ion-icon name="location-outline" class="feature-icon"></ion-icon>
+          <div class="feature-info">
+            <h3>Multiple Routes</h3>
+            <p>Your experience is our priority</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="start-actions">
+        <ion-button expand="block" class="start-button" routerLink="/login">
+          <ion-icon name="log-in-outline" slot="start"></ion-icon>
+          Login
+        </ion-button>
+        
+        <ion-button expand="block" fill="outline" class="start-button secondary" routerLink="/home">
+          <ion-icon name="person-outline" slot="start"></ion-icon>
+          Guest
+        </ion-button>
+      </div>
+    </div>
+  </div>
+</ion-content>

@@ -1,0 +1,167 @@
+<ion-content [fullscreen]="true" class="main-container">
+  <!-- Map Section - Top Half -->
+  <div class="map-section">
+    <div id="tracking-map" class="map"></div>
+  </div>
+
+  <!-- Information Panel - Bottom Half -->
+  <div class="info-section">
+    <!-- Navigation Controls -->
+    <div class="nav-controls">
+      <ion-button 
+        size="small" 
+        fill="clear" 
+        color="light"
+        (click)="goBack()"
+        class="back-button">
+        <ion-icon name="arrow-back" slot="start"></ion-icon>
+        Back
+      </ion-button>
+      <ion-button 
+        size="small" 
+        fill="clear" 
+        color="light"
+        (click)="centerMap()"
+        class="center-button">
+        <ion-icon name="locate-outline"></ion-icon>
+      </ion-button>
+    </div>
+
+    <!-- Admin Controls -->
+    <div class="admin-controls-section">
+      <ion-button 
+        size="default" 
+        fill="solid" 
+        color="primary"
+        (click)="toggleRoute()"
+        expand="block"
+        class="toggle-button">
+        <ion-icon [name]="routeDirection === 'serasa-to-labuan' ? 'arrow-forward' : 'arrow-back'" slot="start"></ion-icon>
+        {{ routeDirection === 'serasa-to-labuan' ? 'Serasa → Labuan' : 'Labuan → Serasa' }}
+      </ion-button>
+    </div>
+
+    <div class="route-header">
+      <div class="route-title">
+        <ion-icon name="boat"></ion-icon>
+        <span>Ferry Route Information</span>
+      </div>
+      <div class="live-indicator">
+        <div class="pulse"></div>
+        <span>LIVE</span>
+      </div>
+    </div>
+
+    <!-- Current Route Display -->
+    <div class="current-route">
+      <div class="location-card departure-card">
+        <div class="card-header">
+          <ion-icon name="location"></ion-icon>
+          <span>DEPARTURE</span>
+        </div>
+        <div class="location-name">{{ currentRoute.from.name }}</div>
+        <div class="location-country">{{ currentRoute.from.country }}</div>
+      </div>
+
+      
+
+      <div class="location-card arrival-card">
+        <div class="card-header">
+          <ion-icon name="flag"></ion-icon>
+          <span>ARRIVAL</span>
+        </div>
+        <div class="location-name">{{ currentRoute.to.name }}</div>
+        <div class="location-country">{{ currentRoute.to.country }}</div>
+      </div>
+    </div>
+
+    <!-- Travel Statistics -->
+    <div class="travel-stats">
+      <div class="stat-item">
+        <ion-icon name="speedometer-outline"></ion-icon>
+        <div class="stat-content">
+          <div class="stat-value">{{ routeDistance }}</div>
+          <div class="stat-label">Distance</div>
+        </div>
+      </div>
+      
+      <div class="stat-item">
+        <ion-icon name="time-outline"></ion-icon>
+        <div class="stat-content">
+          <div class="stat-value">{{ routeDuration }}</div>
+          <div class="stat-label">Duration</div>
+        </div>
+      </div>
+      
+      <div class="stat-item">
+        <ion-icon name="speedometer"></ion-icon>
+        <div class="stat-content">
+          <div class="stat-value">25 knots</div>
+          <div class="stat-label">Ferry Speed</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- User Booking Information -->
+    <div class="booking-info" *ngIf="activeBooking">
+      <div class="booking-card">
+        <div class="booking-header">
+          <ion-icon name="ticket-outline"></ion-icon>
+          <span>Your Active Booking</span>
+          <ion-chip [color]="getBookingStatusColor(activeBooking.status)" class="status-chip">
+            {{ getBookingStatusText(activeBooking.status) }}
+          </ion-chip>
+        </div>
+        
+        <div class="booking-details">
+          <div class="booking-row">
+            <span class="label">Booking ID:</span>
+            <span class="value">{{ activeBooking.id ? activeBooking.id.substring(0, 8) + '...' : 'N/A' }}</span>
+          </div>
+          
+          <div class="booking-row" *ngIf="activeBooking.ferryBooking">
+            <span class="label">Travel Date:</span>
+            <span class="value">{{ formatBookingDate(activeBooking.ferryBooking.travelDate) }}</span>
+          </div>
+          
+          <div class="booking-row" *ngIf="activeBooking.ferryBooking">
+            <span class="label">Travel Time:</span>
+            <span class="value">{{ activeBooking.ferryBooking.travelTime }}</span>
+          </div>
+          
+          <div class="booking-row">
+            <span class="label">Passengers:</span>
+            <span class="value">{{ activeBooking.guests || 1 }}</span>
+          </div>
+          
+          <div class="booking-row">
+            <span class="label">Total Price:</span>
+            <span class="value price">${{ activeBooking.totalPrice || '0' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Additional Info -->
+    <div class="additional-info" *ngIf="!activeBooking">
+      <div class="info-card">
+        <ion-icon name="information-circle"></ion-icon>
+        <div class="info-text">
+          <strong>No Active Booking</strong><br>
+          Book your ferry ticket to see tracking information here
+        </div>
+      </div>
+    </div>
+
+    <!-- General Ferry Info -->
+    <div class="additional-info" *ngIf="activeBooking">
+      <div class="info-card">
+        <ion-icon name="information-circle"></ion-icon>
+        <div class="info-text">
+          <strong>Ferry Tracking</strong><br>
+          Real-time updates for your booked journey
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>
