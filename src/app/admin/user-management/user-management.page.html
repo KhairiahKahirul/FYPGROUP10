@@ -1,0 +1,143 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>User Management</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="loadUsers()" [disabled]="isLoading">
+        <ion-icon name="refresh-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="user-container">
+    <!-- Search and Filters -->
+    <ion-card class="filters-card">
+      <ion-card-content>
+        <div class="filters-grid">
+          <ion-item class="search-item">
+            <ion-label position="stacked">Search</ion-label>
+            <ion-input 
+              [(ngModel)]="searchTerm" 
+              placeholder="Search by name, email, or ID"
+              (ionInput)="filterUsers()">
+              <ion-icon name="search-outline" slot="start"></ion-icon>
+            </ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">Status</ion-label>
+            <ion-select 
+              [(ngModel)]="selectedStatus" 
+              (ionChange)="filterUsers()"
+              placeholder="Select status">
+              <ion-select-option *ngFor="let status of statuses" [value]="status">
+                {{ status }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Loading Spinner -->
+    <div *ngIf="isLoading" class="loading-container">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Loading users...</p>
+    </div>
+
+    <!-- Users Table -->
+    <div *ngIf="!isLoading" class="users-content">
+      <ion-card *ngIf="filteredUsers.length === 0" class="no-data-card">
+        <ion-card-content>
+          <div class="no-data">
+            <ion-icon name="people-outline" color="medium"></ion-icon>
+            <h3>No users found</h3>
+            <p>Try adjusting your search criteria or filters</p>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card *ngIf="filteredUsers.length > 0" class="users-table-card">
+        <ion-card-header>
+          <ion-card-title>
+            <ion-icon name="people-outline"></ion-icon>
+            Users ({{ filteredUsers.length }})
+          </ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="users-table">
+            <div class="table-header">
+              <div class="header-cell">ID</div>
+              <div class="header-cell">Name</div>
+              <div class="header-cell">Contact</div>
+              <div class="header-cell">Registration</div>
+              <div class="header-cell">Bookings</div>
+              <div class="header-cell">Total Spent</div>
+              <div class="header-cell">Status</div>
+              <div class="header-cell">Actions</div>
+            </div>
+
+            <div class="table-row" *ngFor="let user of filteredUsers">
+              <div class="table-cell">
+                <span class="user-id">{{ user.id }}</span>
+              </div>
+              
+              <div class="table-cell">
+                <h4>{{ user.name }}</h4>
+              </div>
+              
+              <div class="table-cell">
+                <div class="contact-info">
+                  <p>{{ user.email }}</p>
+                  <small>{{ user.phone }}</small>
+                </div>
+              </div>
+              
+              <div class="table-cell">
+                <p>{{ user.registrationDate }}</p>
+              </div>
+              
+              <div class="table-cell">
+                <span class="bookings-count">{{ user.totalBookings }}</span>
+              </div>
+              
+              <div class="table-cell">
+                <span class="amount">BND {{ user.totalSpent | number:'1.2-2' }}</span>
+              </div>
+              
+              <div class="table-cell">
+                <ion-badge [color]="getStatusColor(user.status)">
+                  {{ user.status }}
+                </ion-badge>
+              </div>
+              
+              <div class="table-cell">
+                <ion-button 
+                  fill="clear" 
+                  size="small"
+                  (click)="updateUserStatus(user.id, 'Active')"
+                  *ngIf="user.status !== 'Active'">
+                  <ion-icon name="checkmark-outline" color="success"></ion-icon>
+                </ion-button>
+                
+                <ion-button 
+                  fill="clear" 
+                  size="small"
+                  (click)="updateUserStatus(user.id, 'Suspended')"
+                  *ngIf="user.status === 'Active'">
+                  <ion-icon name="close-outline" color="danger"></ion-icon>
+                </ion-button>
+              </div>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+</ion-content> 

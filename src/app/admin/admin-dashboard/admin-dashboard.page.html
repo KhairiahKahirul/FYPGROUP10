@@ -1,0 +1,172 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="navigateTo('login')">
+        <ion-icon name="log-out-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Admin Dashboard</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="refreshData()" [disabled]="isLoading">
+        <ion-icon name="refresh-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="dashboard-container">
+    <!-- Loading Spinner -->
+    <div *ngIf="isLoading" class="loading-container">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Loading dashboard data...</p>
+    </div>
+
+    <!-- Dashboard Content -->
+    <div *ngIf="!isLoading" class="dashboard-content">
+      <!-- Welcome Section -->
+      <ion-card class="welcome-card">
+        <ion-card-header>
+          <ion-card-title>
+            <ion-icon name="boat-outline" color="primary"></ion-icon>
+            Welcome to Brunei Ferry Ticket Admin
+          </ion-card-title>
+          <ion-card-subtitle>Manage your Muara to Labuan ferry operations efficiently</ion-card-subtitle>
+        </ion-card-header>
+      </ion-card>
+
+      <!-- Statistics Cards -->
+      <div class="stats-grid">
+        <ion-card class="stat-card">
+          <ion-card-content>
+            <div class="stat-content">
+              <div class="stat-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <ion-icon name="ticket-outline"></ion-icon>
+              </div>
+              <div class="stat-details">
+                <h3>{{ stats.totalBookings | number }}</h3>
+                <p>Total Bookings</p>
+              </div>
+            </div>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card class="stat-card">
+          <ion-card-content>
+            <div class="stat-content">
+              <div class="stat-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                <ion-icon name="time-outline"></ion-icon>
+              </div>
+              <div class="stat-details">
+                <h3>{{ stats.pendingBookings | number }}</h3>
+                <p>Pending Bookings</p>
+              </div>
+            </div>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card class="stat-card">
+          <ion-card-content>
+            <div class="stat-content">
+              <div class="stat-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                <ion-icon name="checkmark-circle-outline"></ion-icon>
+              </div>
+              <div class="stat-details">
+                <h3>{{ stats.completedBookings | number }}</h3>
+                <p>Completed</p>
+              </div>
+            </div>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card class="stat-card">
+          <ion-card-content>
+            <div class="stat-content">
+              <div class="stat-icon" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                <ion-icon name="cash-outline"></ion-icon>
+              </div>
+              <div class="stat-details">
+                <h3>BND {{ stats.totalRevenue | number:'1.2-2' }}</h3>
+                <p>Total Revenue</p>
+              </div>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
+
+      <!-- Navigation Cards -->
+      <div class="navigation-grid">
+        <ion-card class="nav-card" (click)="navigateTo('bookings')">
+          <ion-card-content>
+            <div class="nav-content">
+              <ion-icon name="list-outline" color="primary"></ion-icon>
+              <h3>Booking Management</h3>
+              <p>View and manage all ferry bookings</p>
+            </div>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card class="nav-card" (click)="navigateTo('users')">
+          <ion-card-content>
+            <div class="nav-content">
+              <ion-icon name="people-outline" color="primary"></ion-icon>
+              <h3>User Management</h3>
+              <p>Manage customer accounts and profiles</p>
+            </div>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card class="nav-card" (click)="navigateTo('ferries')">
+          <ion-card-content>
+            <div class="nav-content">
+              <ion-icon name="boat-outline" color="primary"></ion-icon>
+              <h3>Ferry Management</h3>
+              <p>Manage ferry schedules and routes</p>
+            </div>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card class="nav-card" (click)="navigateTo('reports')">
+          <ion-card-content>
+            <div class="nav-content">
+              <ion-icon name="analytics-outline" color="primary"></ion-icon>
+              <h3>Reports & Analytics</h3>
+              <p>View detailed reports and insights</p>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
+
+      <!-- Recent Bookings -->
+      <ion-card class="recent-bookings-card">
+        <ion-card-header>
+          <ion-card-title>Recent Bookings</ion-card-title>
+          <ion-button fill="clear" (click)="navigateTo('bookings')">
+            View All
+            <ion-icon name="arrow-forward" slot="end"></ion-icon>
+          </ion-button>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="bookings-list">
+            <div *ngFor="let booking of recentBookings" class="booking-item">
+              <div class="booking-info">
+                <div class="booking-header">
+                  <h4>{{ booking.passengerName }}</h4>
+                  <span class="booking-id">{{ booking.id }}</span>
+                </div>
+                <p class="route">{{ booking.ferryRoute }}</p>
+                <p class="time">{{ booking.departureTime }}</p>
+              </div>
+              <div class="booking-status">
+                <span class="status-badge" [class]="'status-' + booking.status.toLowerCase()">
+                  {{ booking.status }}
+                </span>
+                <p class="amount">BND {{ booking.amount | number:'1.2-2' }}</p>
+              </div>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+</ion-content> 

@@ -1,0 +1,233 @@
+.user-container {
+  padding: 16px;
+  background: #f8f9fa;
+  min-height: 100vh;
+}
+
+.filters-card {
+  margin-bottom: 24px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  
+  ion-card-content {
+    padding: 20px;
+  }
+}
+
+.filters-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.search-item {
+  --border-radius: 12px;
+  --border-width: 2px;
+  --border-color: #ecf0f1;
+  --background: #f8f9fa;
+  
+  ion-label {
+    font-weight: 600;
+    color: #2c3e50;
+  }
+  
+  ion-input {
+    --padding-start: 16px;
+    --padding-end: 16px;
+    --padding-top: 16px;
+    --padding-bottom: 16px;
+  }
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 50vh;
+  
+  ion-spinner {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 16px;
+  }
+  
+  p {
+    color: #666;
+    font-size: 16px;
+  }
+}
+
+.no-data-card {
+  text-align: center;
+  padding: 40px;
+  
+  .no-data {
+    ion-icon {
+      font-size: 64px;
+      margin-bottom: 16px;
+    }
+    
+    h3 {
+      color: #7f8c8d;
+      margin: 0 0 8px 0;
+    }
+    
+    p {
+      color: #bdc3c7;
+      margin: 0;
+    }
+  }
+}
+
+.users-table-card {
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  
+  ion-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 20px 0 20px;
+    
+    ion-card-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 20px;
+      font-weight: 600;
+      color: #2c3e50;
+    }
+  }
+  
+  ion-card-content {
+    padding: 20px;
+  }
+}
+
+.users-table {
+  .table-header {
+    display: grid;
+    grid-template-columns: 80px 1fr 1fr 1fr 100px 120px 100px 120px;
+    gap: 16px;
+    padding: 16px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    font-weight: 600;
+    color: #2c3e50;
+    
+    @media (max-width: 1200px) {
+      grid-template-columns: 80px 1fr 1fr 1fr 100px 120px 100px 100px;
+    }
+    
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
+  
+  .table-row {
+    display: grid;
+    grid-template-columns: 80px 1fr 1fr 1fr 100px 120px 100px 120px;
+    gap: 16px;
+    padding: 16px;
+    border-bottom: 1px solid #ecf0f1;
+    align-items: center;
+    
+    @media (max-width: 1200px) {
+      grid-template-columns: 80px 1fr 1fr 1fr 100px 120px 100px 100px;
+    }
+    
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+      gap: 8px;
+      padding: 16px;
+      border: 1px solid #ecf0f1;
+      border-radius: 12px;
+      margin-bottom: 16px;
+    }
+    
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+  
+  .table-cell {
+    @media (max-width: 768px) {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      
+      &::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #2c3e50;
+        margin-right: 16px;
+      }
+    }
+  }
+}
+
+.user-id {
+  background: #ecf0f1;
+  color: #7f8c8d;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.contact-info {
+  p {
+    margin: 0 0 2px 0;
+    color: #2c3e50;
+    font-size: 14px;
+  }
+  
+  small {
+    color: #7f8c8d;
+    font-size: 12px;
+  }
+}
+
+.bookings-count {
+  font-size: 16px;
+  font-weight: 600;
+  color: #3498db;
+}
+
+.amount {
+  font-size: 16px;
+  font-weight: 600;
+  color: #27ae60;
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .user-container {
+    padding: 12px;
+  }
+  
+  .filters-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .users-table-card {
+    ion-card-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .user-container {
+    padding: 8px;
+  }
+  
+  .filters-card ion-card-content {
+    padding: 16px;
+  }
+} 

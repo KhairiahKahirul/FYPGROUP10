@@ -1,0 +1,74 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-title>Admin Login</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="login-content">
+  <div class="login-container">
+    <div class="login-card">
+      <div class="login-header">
+        <div class="logo-container">
+          <ion-icon name="boat-outline" class="logo-icon"></ion-icon>
+        </div>
+        <h1>Brunei Ferry Ticket Admin</h1>
+        <p>Sign in to access the admin dashboard</p>
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="login-form">
+        <ion-item class="form-item">
+          <ion-label position="floating">
+            <ion-icon name="person-outline" slot="start"></ion-icon>
+            Username
+          </ion-label>
+          <ion-input 
+            formControlName="username" 
+            type="text" 
+            placeholder="Enter username"
+            [class.ion-invalid]="username?.invalid && username?.touched"
+            [class.ion-valid]="username?.valid && username?.touched">
+          </ion-input>
+        </ion-item>
+        
+        <div class="validation-error" *ngIf="username?.invalid && username?.touched">
+          <span *ngIf="username?.errors?.['required']">Username is required</span>
+          <span *ngIf="username?.errors?.['minlength']">Username must be at least 3 characters</span>
+        </div>
+
+        <ion-item class="form-item">
+          <ion-label position="floating">
+            <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+            Password
+          </ion-label>
+          <ion-input 
+            formControlName="password" 
+            type="password" 
+            placeholder="Enter password"
+            [class.ion-invalid]="password?.invalid && password?.touched"
+            [class.ion-valid]="password?.valid && password?.touched">
+          </ion-input>
+        </ion-item>
+        
+        <div class="validation-error" *ngIf="password?.invalid && password?.touched">
+          <span *ngIf="password?.errors?.['required']">Password is required</span>
+          <span *ngIf="password?.errors?.['minlength']">Password must be at least 6 characters</span>
+        </div>
+
+        <ion-button 
+          expand="block" 
+          type="submit" 
+          class="login-button"
+          [disabled]="isLoading || loginForm.invalid">
+          <ion-spinner name="crescent" *ngIf="isLoading"></ion-spinner>
+          <span *ngIf="!isLoading">Sign In</span>
+        </ion-button>
+      </form>
+
+      <div class="demo-credentials">
+        <p><strong>Demo Credentials:</strong></p>
+        <p>Username: <code>admin</code></p>
+        <p>Password: <code>admin123</code></p>
+      </div>
+    </div>
+  </div>
+</ion-content> 

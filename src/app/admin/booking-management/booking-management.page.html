@@ -1,0 +1,172 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Booking Management</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="loadBookings()" [disabled]="isLoading">
+        <ion-icon name="refresh-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="booking-container">
+    <!-- Search and Filters -->
+    <ion-card class="filters-card">
+      <ion-card-content>
+        <div class="filters-grid">
+          <ion-item class="search-item">
+            <ion-label position="stacked">Search</ion-label>
+            <ion-input 
+              [(ngModel)]="searchTerm" 
+              placeholder="Search by name, ID, or email"
+              (ionInput)="filterBookings()">
+              <ion-icon name="search-outline" slot="start"></ion-icon>
+            </ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">Status</ion-label>
+            <ion-select 
+              [(ngModel)]="selectedStatus" 
+              (ionChange)="filterBookings()"
+              placeholder="Select status">
+              <ion-select-option *ngFor="let status of statuses" [value]="status">
+                {{ status }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">Route</ion-label>
+            <ion-select 
+              [(ngModel)]="selectedRoute" 
+              (ionChange)="filterBookings()"
+              placeholder="Select route">
+              <ion-select-option *ngFor="let route of routes" [value]="route">
+                {{ route }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Loading Spinner -->
+    <div *ngIf="isLoading" class="loading-container">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Loading bookings...</p>
+    </div>
+
+    <!-- Bookings Table -->
+    <div *ngIf="!isLoading" class="bookings-content">
+      <ion-card *ngIf="filteredBookings.length === 0" class="no-data-card">
+        <ion-card-content>
+          <div class="no-data">
+            <ion-icon name="document-outline" color="medium"></ion-icon>
+            <h3>No bookings found</h3>
+            <p>Try adjusting your search criteria or filters</p>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card *ngIf="filteredBookings.length > 0" class="bookings-table-card">
+        <ion-card-header>
+          <ion-card-title>
+            <ion-icon name="list-outline"></ion-icon>
+            Bookings ({{ filteredBookings.length }})
+          </ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="bookings-table">
+            <div class="table-header">
+              <div class="header-cell">ID</div>
+              <div class="header-cell">Passenger</div>
+              <div class="header-cell">Route</div>
+              <div class="header-cell">Date & Time</div>
+              <div class="header-cell">Status</div>
+              <div class="header-cell">Payment</div>
+              <div class="header-cell">Amount</div>
+              <div class="header-cell">Actions</div>
+            </div>
+
+            <div class="table-row" *ngFor="let booking of filteredBookings">
+              <div class="table-cell">
+                <span class="booking-id">{{ booking.id }}</span>
+              </div>
+              
+              <div class="table-cell">
+                <div class="passenger-info">
+                  <h4>{{ booking.passengerName }}</h4>
+                  <p>{{ booking.passengerEmail }}</p>
+                  <small>{{ booking.passengerPhone }}</small>
+                </div>
+              </div>
+              
+              <div class="table-cell">
+                <div class="route-info">
+                  <p>{{ booking.ferryRoute }}</p>
+                  <small>{{ booking.passengers }} passenger(s)</small>
+                </div>
+              </div>
+              
+              <div class="table-cell">
+                <div class="time-info">
+                  <p><strong>Departure:</strong> {{ booking.departureTime }}</p>
+                  <p *ngIf="booking.returnTime"><strong>Return:</strong> {{ booking.returnTime }}</p>
+                </div>
+              </div>
+              
+              <div class="table-cell">
+                <ion-badge [color]="getStatusColor(booking.status)">
+                  {{ booking.status }}
+                </ion-badge>
+              </div>
+              
+              <div class="table-cell">
+                <ion-badge [color]="getPaymentStatusColor(booking.paymentStatus)">
+                  {{ booking.paymentStatus }}
+                </ion-badge>
+              </div>
+              
+              <div class="table-cell">
+                <span class="amount">BND {{ booking.amount | number:'1.2-2' }}</span>
+              </div>
+              
+              <div class="table-cell">
+                <ion-button 
+                  fill="clear" 
+                  size="small"
+                  (click)="updateBookingStatus(booking.id, 'Confirmed')"
+                  *ngIf="booking.status === 'Pending'">
+                  <ion-icon name="checkmark-outline" color="success"></ion-icon>
+                </ion-button>
+                
+                <ion-button 
+                  fill="clear" 
+                  size="small"
+                  (click)="updateBookingStatus(booking.id, 'Cancelled')"
+                  *ngIf="booking.status === 'Pending' || booking.status === 'Confirmed'">
+                  <ion-icon name="close-outline" color="danger"></ion-icon>
+                </ion-button>
+                
+                <ion-button 
+                  fill="clear" 
+                  size="small"
+                  (click)="updateBookingStatus(booking.id, 'Completed')"
+                  *ngIf="booking.status === 'Confirmed'">
+                  <ion-icon name="checkmark-done-outline" color="primary"></ion-icon>
+                </ion-button>
+              </div>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+</ion-content> 

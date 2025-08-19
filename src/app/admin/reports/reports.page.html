@@ -1,0 +1,155 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Reports & Analytics</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="loadReports()" [disabled]="isLoading">
+        <ion-icon name="refresh-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="reports-container">
+    <!-- Period Selector -->
+    <ion-card class="period-card">
+      <ion-card-content>
+        <ion-item>
+          <ion-label position="stacked">Time Period</ion-label>
+          <ion-select 
+            [(ngModel)]="selectedPeriod" 
+            (ionChange)="loadReports()"
+            placeholder="Select period">
+            <ion-select-option *ngFor="let period of periods" [value]="period">
+              {{ period | titlecase }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Loading Spinner -->
+    <div *ngIf="isLoading" class="loading-container">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Loading reports...</p>
+    </div>
+
+    <!-- Reports Content -->
+    <div *ngIf="!isLoading" class="reports-content">
+      <!-- Summary Cards -->
+      <div class="summary-grid">
+        <ion-card class="summary-card">
+          <ion-card-content>
+            <div class="summary-content">
+              <div class="summary-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <ion-icon name="cash-outline"></ion-icon>
+              </div>
+              <div class="summary-details">
+                <h3>BND {{ getTotalRevenue() | number:'1.2-2' }}</h3>
+                <p>Total Revenue</p>
+              </div>
+            </div>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card class="summary-card">
+          <ion-card-content>
+            <div class="summary-content">
+              <div class="summary-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                <ion-icon name="ticket-outline"></ion-icon>
+              </div>
+              <div class="summary-details">
+                <h3>{{ getTotalBookings() | number }}</h3>
+                <p>Total Bookings</p>
+              </div>
+            </div>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card class="summary-card">
+          <ion-card-content>
+            <div class="summary-content">
+              <div class="summary-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                <ion-icon name="trending-up-outline"></ion-icon>
+              </div>
+              <div class="summary-details">
+                <h3>BND {{ getAverageRevenue() | number:'1.2-2' }}</h3>
+                <p>Average Revenue</p>
+              </div>
+            </div>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card class="summary-card">
+          <ion-card-content>
+            <div class="summary-content">
+              <div class="summary-icon" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                <ion-icon name="boat-outline"></ion-icon>
+              </div>
+              <div class="summary-details">
+                <h3>{{ getTopRoute().route }}</h3>
+                <p>Top Performing Route</p>
+              </div>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
+
+      <!-- Revenue Chart -->
+      <ion-card class="chart-card">
+        <ion-card-header>
+          <ion-card-title>Revenue Trend</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="chart-container">
+            <div class="chart-bars">
+              <div class="chart-bar" *ngFor="let data of revenueData">
+                <div class="bar" [style.height.%]="(data.revenue / getTotalRevenue()) * 100"></div>
+                <div class="bar-label">
+                  <span class="month">{{ data.month }}</span>
+                  <span class="value">RM {{ data.revenue | number:'1.0-0' }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <!-- Route Performance -->
+      <ion-card class="performance-card">
+        <ion-card-header>
+          <ion-card-title>Route Performance</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="route-performance">
+            <div class="route-item" *ngFor="let route of routeData">
+              <div class="route-info">
+                <h4>{{ route.route }}</h4>
+                <div class="route-stats">
+                  <span class="stat">
+                    <ion-icon name="ticket-outline"></ion-icon>
+                    {{ route.bookings }} bookings
+                  </span>
+                  <span class="stat">
+                    <ion-icon name="cash-outline"></ion-icon>
+                    BND {{ route.revenue | number:'1.2-2' }}
+                  </span>
+                </div>
+              </div>
+              <div class="route-occupancy">
+                <ion-badge [color]="getOccupancyColor(route.occupancy)">
+                  {{ route.occupancy }}% occupancy
+                </ion-badge>
+              </div>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+</ion-content> 

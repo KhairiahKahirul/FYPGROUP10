@@ -1,0 +1,174 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Ferry Management</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="loadFerries()" [disabled]="isLoading">
+        <ion-icon name="refresh-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="ferry-container">
+    <!-- Search and Filters -->
+    <ion-card class="filters-card">
+      <ion-card-content>
+        <div class="filters-grid">
+          <ion-item class="search-item">
+            <ion-label position="stacked">Search</ion-label>
+            <ion-input 
+              [(ngModel)]="searchTerm" 
+              placeholder="Search by name, ID, or route"
+              (ionInput)="filterFerries()">
+              <ion-icon name="search-outline" slot="start"></ion-icon>
+            </ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">Status</ion-label>
+            <ion-select 
+              [(ngModel)]="selectedStatus" 
+              (ionChange)="filterFerries()"
+              placeholder="Select status">
+              <ion-select-option *ngFor="let status of statuses" [value]="status">
+                {{ status }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">Route</ion-label>
+            <ion-select 
+              [(ngModel)]="selectedRoute" 
+              (ionChange)="filterFerries()"
+              placeholder="Select route">
+              <ion-select-option *ngFor="let route of routes" [value]="route">
+                {{ route }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Loading Spinner -->
+    <div *ngIf="isLoading" class="loading-container">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Loading ferries...</p>
+    </div>
+
+    <!-- Ferries Table -->
+    <div *ngIf="!isLoading" class="ferries-content">
+      <ion-card *ngIf="filteredFerries.length === 0" class="no-data-card">
+        <ion-card-content>
+          <div class="no-data">
+            <ion-icon name="boat-outline" color="medium"></ion-icon>
+            <h3>No ferries found</h3>
+            <p>Try adjusting your search criteria or filters</p>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card *ngIf="filteredFerries.length > 0" class="ferries-table-card">
+        <ion-card-header>
+          <ion-card-title>
+            <ion-icon name="boat-outline"></ion-icon>
+            Ferries ({{ filteredFerries.length }})
+          </ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="ferries-table">
+            <div class="table-header">
+              <div class="header-cell">ID</div>
+              <div class="header-cell">Name</div>
+              <div class="header-cell">Route</div>
+              <div class="header-cell">Schedule</div>
+              <div class="header-cell">Capacity</div>
+              <div class="header-cell">Occupancy</div>
+              <div class="header-cell">Price</div>
+              <div class="header-cell">Status</div>
+              <div class="header-cell">Actions</div>
+            </div>
+
+            <div class="table-row" *ngFor="let ferry of filteredFerries">
+              <div class="table-cell">
+                <span class="ferry-id">{{ ferry.id }}</span>
+              </div>
+              
+              <div class="table-cell">
+                <h4>{{ ferry.name }}</h4>
+              </div>
+              
+              <div class="table-cell">
+                <p>{{ ferry.route }}</p>
+                <small>{{ ferry.operatingDays.join(', ') }}</small>
+              </div>
+              
+              <div class="table-cell">
+                <div class="schedule-info">
+                  <p><strong>Departure:</strong> {{ ferry.departureTime }}</p>
+                  <p><strong>Arrival:</strong> {{ ferry.arrivalTime }}</p>
+                </div>
+              </div>
+              
+              <div class="table-cell">
+                <span class="capacity">{{ ferry.capacity }} seats</span>
+              </div>
+              
+              <div class="table-cell">
+                <div class="occupancy-info">
+                  <ion-badge [color]="getOccupancyColor(getOccupancyPercentage(ferry))" class="occupancy-percentage">
+                    {{ getOccupancyPercentage(ferry) | number:'1.0-0' }}%
+                  </ion-badge>
+                  <small>{{ ferry.availableSeats }} available</small>
+                </div>
+              </div>
+              
+              <div class="table-cell">
+                <span class="price">BND {{ ferry.price | number:'1.2-2' }}</span>
+              </div>
+              
+              <div class="table-cell">
+                <ion-badge [color]="getStatusColor(ferry.status)">
+                  {{ ferry.status }}
+                </ion-badge>
+              </div>
+              
+              <div class="table-cell">
+                <ion-button 
+                  fill="clear" 
+                  size="small"
+                  (click)="updateFerryStatus(ferry.id, 'Active')"
+                  *ngIf="ferry.status !== 'Active'">
+                  <ion-icon name="checkmark-outline" color="success"></ion-icon>
+                </ion-button>
+                
+                <ion-button 
+                  fill="clear" 
+                  size="small"
+                  (click)="updateFerryStatus(ferry.id, 'Maintenance')"
+                  *ngIf="ferry.status === 'Active'">
+                  <ion-icon name="construct-outline" color="warning"></ion-icon>
+                </ion-button>
+                
+                <ion-button 
+                  fill="clear" 
+                  size="small"
+                  (click)="updateFerryStatus(ferry.id, 'Cancelled')"
+                  *ngIf="ferry.status === 'Active'">
+                  <ion-icon name="close-outline" color="danger"></ion-icon>
+                </ion-button>
+              </div>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+</ion-content> 
