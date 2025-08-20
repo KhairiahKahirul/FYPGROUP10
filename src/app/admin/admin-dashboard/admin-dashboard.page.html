@@ -1,172 +1,165 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar color="primary">
-    <ion-buttons slot="start">
-      <ion-button (click)="navigateTo('login')">
-        <ion-icon name="log-out-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-    <ion-title>Admin Dashboard</ion-title>
+    <ion-title>Brunei Ferry Admin Dashboard</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="refreshData()" [disabled]="isLoading">
-        <ion-icon name="refresh-outline"></ion-icon>
+      <ion-button (click)="loadDashboardData()">
+        <ion-icon name="refresh"></ion-icon>
+      </ion-button>
+      <ion-button (click)="logout()">
+        <ion-icon name="log-out-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content>
   <div class="dashboard-container">
-    <!-- Loading Spinner -->
-    <div *ngIf="isLoading" class="loading-container">
-      <ion-spinner name="crescent"></ion-spinner>
-      <p>Loading dashboard data...</p>
-    </div>
+    <!-- Welcome Section -->
+    <ion-card class="welcome-card" *ngIf="currentAdmin">
+      <ion-card-content>
+        <div class="welcome-content">
+          <ion-icon name="person-circle" class="admin-avatar"></ion-icon>
+                           <div class="welcome-text">
+                   <h2>Welcome back, {{ currentAdmin.name }}!</h2>
+                   <p>Role: {{ getRoleDisplayName(currentAdmin.role) }} | Username: {{ currentAdmin.username }}</p>
+                   <p>Manage your Brunei ferry operations efficiently</p>
+                 </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
 
-    <!-- Dashboard Content -->
-    <div *ngIf="!isLoading" class="dashboard-content">
-      <!-- Welcome Section -->
-      <ion-card class="welcome-card">
-        <ion-card-header>
-          <ion-card-title>
-            <ion-icon name="boat-outline" color="primary"></ion-icon>
-            Welcome to Brunei Ferry Ticket Admin
-          </ion-card-title>
-          <ion-card-subtitle>Manage your Muara to Labuan ferry operations efficiently</ion-card-subtitle>
-        </ion-card-header>
-      </ion-card>
+    <!-- Main Action Cards -->
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12" size-md="6">
+          <ion-card (click)="goToBookingView()" class="action-card">
+            <ion-card-header>
+              <ion-card-title>
+                <ion-icon name="list" color="primary"></ion-icon>
+                Booking View
+              </ion-card-title>
+              <ion-card-subtitle>View and manage all bookings</ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content>
+              <p>Access complete booking information, update statuses, and manage passenger details.</p>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
 
-      <!-- Statistics Cards -->
-      <div class="stats-grid">
-        <ion-card class="stat-card">
-          <ion-card-content>
-            <div class="stat-content">
-              <div class="stat-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                <ion-icon name="ticket-outline"></ion-icon>
-              </div>
-              <div class="stat-details">
-                <h3>{{ stats.totalBookings | number }}</h3>
-                <p>Total Bookings</p>
-              </div>
-            </div>
-          </ion-card-content>
-        </ion-card>
+        <ion-col size="12" size-md="6">
+          <ion-card (click)="goToChangeDelay()" class="action-card">
+            <ion-card-header>
+              <ion-card-title>
+                <ion-icon name="time" color="warning"></ion-icon>
+                Change Delay
+              </ion-card-title>
+              <ion-card-subtitle>Update ferry schedules and delays</ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content>
+              <p>Modify departure times, update delays, and manage ferry schedules.</p>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
 
-        <ion-card class="stat-card">
-          <ion-card-content>
-            <div class="stat-content">
-              <div class="stat-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
-                <ion-icon name="time-outline"></ion-icon>
-              </div>
-              <div class="stat-details">
-                <h3>{{ stats.pendingBookings | number }}</h3>
-                <p>Pending Bookings</p>
-              </div>
-            </div>
-          </ion-card-content>
-        </ion-card>
+      <ion-row>
+        <ion-col size="12" size-md="6">
+          <ion-card (click)="goToNotifications()" class="action-card">
+            <ion-card-header>
+              <ion-card-title>
+                <ion-icon name="notifications" color="success"></ion-icon>
+                Send Notifications
+              </ion-card-title>
+              <ion-card-subtitle>Notify users about status changes</ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content>
+              <p>Send notifications for payment confirmation, booking cancellation, ferry delays, and schedule changes.</p>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
 
-        <ion-card class="stat-card">
-          <ion-card-content>
-            <div class="stat-content">
-              <div class="stat-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
-                <ion-icon name="checkmark-circle-outline"></ion-icon>
-              </div>
-              <div class="stat-details">
-                <h3>{{ stats.completedBookings | number }}</h3>
-                <p>Completed</p>
-              </div>
-            </div>
-          </ion-card-content>
-        </ion-card>
+        <ion-col size="12" size-md="6">
+          <ion-card (click)="openQRScanner()" class="action-card">
+            <ion-card-header>
+              <ion-card-title>
+                <ion-icon name="qr-code" color="tertiary"></ion-icon>
+                QR Code Scanner
+              </ion-card-title>
+              <ion-card-subtitle>Scan boarding passes</ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content>
+              <p>Scan QR codes on boarding passes to verify passenger check-ins and manage boarding.</p>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
 
-        <ion-card class="stat-card">
-          <ion-card-content>
-            <div class="stat-content">
-              <div class="stat-icon" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
-                <ion-icon name="cash-outline"></ion-icon>
-              </div>
-              <div class="stat-details">
-                <h3>BND {{ stats.totalRevenue | number:'1.2-2' }}</h3>
-                <p>Total Revenue</p>
-              </div>
-            </div>
-          </ion-card-content>
-        </ion-card>
-      </div>
+    <!-- Recent Notifications -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="notifications-outline"></ion-icon>
+          Recent Notifications
+          <ion-badge *ngIf="unreadNotificationsCount > 0" color="danger" class="notification-badge">
+            {{ unreadNotificationsCount }}
+          </ion-badge>
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list>
+          <ion-item *ngFor="let notification of notifications" 
+                    [class.unread]="!notification.isRead"
+                    (click)="markNotificationAsRead(notification.id)">
+            <ion-icon [name]="getNotificationIcon(notification.type)" 
+                      [color]="getNotificationColor(notification.type)" 
+                      slot="start"></ion-icon>
+            <ion-label>
+              <h3>{{ notification.message }}</h3>
+              <p>{{ notification.timestamp | date:'short' }}</p>
+            </ion-label>
+            <ion-badge *ngIf="!notification.isRead" color="danger">New</ion-badge>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
 
-      <!-- Navigation Cards -->
-      <div class="navigation-grid">
-        <ion-card class="nav-card" (click)="navigateTo('bookings')">
-          <ion-card-content>
-            <div class="nav-content">
-              <ion-icon name="list-outline" color="primary"></ion-icon>
-              <h3>Booking Management</h3>
-              <p>View and manage all ferry bookings</p>
-            </div>
-          </ion-card-content>
-        </ion-card>
-
-        <ion-card class="nav-card" (click)="navigateTo('users')">
-          <ion-card-content>
-            <div class="nav-content">
-              <ion-icon name="people-outline" color="primary"></ion-icon>
-              <h3>User Management</h3>
-              <p>Manage customer accounts and profiles</p>
-            </div>
-          </ion-card-content>
-        </ion-card>
-
-        <ion-card class="nav-card" (click)="navigateTo('ferries')">
-          <ion-card-content>
-            <div class="nav-content">
-              <ion-icon name="boat-outline" color="primary"></ion-icon>
-              <h3>Ferry Management</h3>
-              <p>Manage ferry schedules and routes</p>
-            </div>
-          </ion-card-content>
-        </ion-card>
-
-        <ion-card class="nav-card" (click)="navigateTo('reports')">
-          <ion-card-content>
-            <div class="nav-content">
-              <ion-icon name="analytics-outline" color="primary"></ion-icon>
-              <h3>Reports & Analytics</h3>
-              <p>View detailed reports and insights</p>
-            </div>
-          </ion-card-content>
-        </ion-card>
-      </div>
-
-      <!-- Recent Bookings -->
-      <ion-card class="recent-bookings-card">
-        <ion-card-header>
-          <ion-card-title>Recent Bookings</ion-card-title>
-          <ion-button fill="clear" (click)="navigateTo('bookings')">
-            View All
-            <ion-icon name="arrow-forward" slot="end"></ion-icon>
-          </ion-button>
-        </ion-card-header>
-        <ion-card-content>
-          <div class="bookings-list">
-            <div *ngFor="let booking of recentBookings" class="booking-item">
-              <div class="booking-info">
-                <div class="booking-header">
-                  <h4>{{ booking.passengerName }}</h4>
-                  <span class="booking-id">{{ booking.id }}</span>
-                </div>
-                <p class="route">{{ booking.ferryRoute }}</p>
-                <p class="time">{{ booking.departureTime }}</p>
-              </div>
-              <div class="booking-status">
-                <span class="status-badge" [class]="'status-' + booking.status.toLowerCase()">
+    <!-- Recent Bookings -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="calendar-outline"></ion-icon>
+          Recent Bookings
+        </ion-card-title>
+        <ion-button fill="clear" slot="end" (click)="goToBookingView()">
+          View All
+        </ion-button>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list>
+          <ion-item *ngFor="let booking of recentBookings">
+            <ion-label>
+              <h3>{{ booking.passengerName }}</h3>
+              <p><strong>ID:</strong> {{ booking.id }} | <strong>Route:</strong> {{ booking.ferryRoute }}</p>
+              <p><strong>Date:</strong> {{ booking.departureDate }} | <strong>Time:</strong> {{ booking.departureTime }}</p>
+              <p><strong>Status:</strong> 
+                <ion-badge [color]="booking.status === 'Confirmed' ? 'success' : 'warning'">
                   {{ booking.status }}
-                </span>
-                <p class="amount">BND {{ booking.amount | number:'1.2-2' }}</p>
-              </div>
-            </div>
-          </div>
-        </ion-card-content>
-      </ion-card>
-    </div>
+                </ion-badge>
+              </p>
+            </ion-label>
+            <ion-note slot="end">
+              <strong>BND {{ booking.amount }}</strong>
+            </ion-note>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="isLoading" class="loading-container">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Loading dashboard...</p>
   </div>
 </ion-content> 

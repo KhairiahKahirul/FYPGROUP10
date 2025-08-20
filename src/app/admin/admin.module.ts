@@ -9,13 +9,15 @@ import { BookingManagementPage } from './booking-management/booking-management.p
 import { UserManagementPage } from './user-management/user-management.page';
 import { FerryManagementPage } from './ferry-management/ferry-management.page';
 import { ReportsPage } from './reports/reports.page';
+import { NotificationsPage } from './notifications/notifications.page';
+import { QrScannerPage } from './qr-scanner/qr-scanner.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    IonicModule,
+    IonicModule.forRoot(),
     AdminRoutingModule
   ],
   declarations: [
@@ -24,7 +26,9 @@ import { ReportsPage } from './reports/reports.page';
     BookingManagementPage,
     UserManagementPage,
     FerryManagementPage,
-    ReportsPage
+    ReportsPage,
+    NotificationsPage,
+    QrScannerPage
   ]
 })
 export class AdminModule {} 

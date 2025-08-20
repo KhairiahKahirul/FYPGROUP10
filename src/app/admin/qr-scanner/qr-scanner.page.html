@@ -1,0 +1,176 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>QR Code Scanner</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="clearScanHistory()" fill="clear">
+        <ion-icon name="trash-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="scanner-container">
+    
+    <!-- Scanner Instructions -->
+    <ion-card *ngIf="!isScanning">
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="qr-code-outline"></ion-icon>
+          Boarding Pass Scanner
+        </ion-card-title>
+        <ion-card-subtitle>Scan QR codes on passenger boarding passes</ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <p>Use this scanner to verify passenger check-ins by scanning the QR code on their boarding pass.</p>
+        
+        <div class="scanner-actions">
+          <ion-button 
+            expand="block" 
+            color="primary" 
+            (click)="startScan()"
+            class="scan-button">
+            <ion-icon name="camera" slot="start"></ion-icon>
+            Start Scanner
+          </ion-button>
+          
+          <ion-button 
+            expand="block" 
+            fill="outline" 
+            (click)="simulateScan()"
+            class="simulate-button">
+            <ion-icon name="play" slot="start"></ion-icon>
+            Simulate Scan (Test)
+          </ion-button>
+          
+          <ion-button 
+            expand="block" 
+            fill="outline" 
+            (click)="manualQRInput()"
+            class="manual-button">
+            <ion-icon name="create" slot="start"></ion-icon>
+            Manual QR Input
+          </ion-button>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Scanner View -->
+    <div *ngIf="isScanning" class="scanner-view">
+      <div class="scanner-overlay">
+        <div class="scanner-frame">
+          <div class="corner top-left"></div>
+          <div class="corner top-right"></div>
+          <div class="corner bottom-left"></div>
+          <div class="corner bottom-right"></div>
+        </div>
+        <p class="scanner-instruction">Position QR code within the frame</p>
+      </div>
+      
+      <ion-button 
+        expand="block" 
+        color="danger" 
+        (click)="stopScan()"
+        class="stop-scan-button">
+        <ion-icon name="stop" slot="start"></ion-icon>
+        Stop Scanner
+      </ion-button>
+    </div>
+
+    <!-- Last Scanned Result -->
+    <ion-card *ngIf="scannedData && !isScanning" class="result-card">
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="checkmark-circle" color="success"></ion-icon>
+          Last Scanned Result
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="passenger-info">
+          <div class="info-row">
+            <strong>Passenger:</strong> {{ scannedData.passengerName }}
+          </div>
+          <div class="info-row">
+            <strong>Booking ID:</strong> {{ scannedData.bookingId }}
+          </div>
+          <div class="info-row">
+            <strong>Date:</strong> {{ scannedData.departureDate }}
+          </div>
+          <div class="info-row">
+            <strong>Time:</strong> {{ scannedData.departureTime }}
+          </div>
+          <div class="info-row">
+            <strong>Route:</strong> {{ scannedData.route }}
+          </div>
+          <div class="info-row">
+            <strong>Seat:</strong> {{ scannedData.seatNumber }}
+          </div>
+          <div class="info-row">
+            <strong>Status:</strong> 
+            <ion-badge [color]="scannedData.status === 'Confirmed' ? 'success' : 'warning'">
+              {{ scannedData.status }}
+            </ion-badge>
+          </div>
+        </div>
+        
+        <div class="result-actions">
+          <ion-button 
+            expand="block" 
+            (click)="startScan()"
+            class="scan-again-button">
+            <ion-icon name="refresh" slot="start"></ion-icon>
+            Scan Another
+          </ion-button>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Scan History -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="time-outline"></ion-icon>
+          Scan History
+          <ion-badge color="primary" class="history-count">{{ scanHistory.length }}</ion-badge>
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list>
+          <ion-item *ngFor="let scan of scanHistory.slice(0, 10)">
+            <ion-icon 
+              name="qr-code" 
+              color="primary" 
+              slot="start">
+            </ion-icon>
+            <ion-label>
+              <h3>{{ scan.passengerName }}</h3>
+              <p><strong>ID:</strong> {{ scan.bookingId }} | <strong>Route:</strong> {{ scan.route }}</p>
+              <p><strong>Date:</strong> {{ scan.departureDate }} | <strong>Time:</strong> {{ scan.departureTime }}</p>
+              <p><strong>Scanned:</strong> {{ scan.scannedAt | date:'short' }}</p>
+            </ion-label>
+            <ion-badge 
+              slot="end" 
+              [color]="scan.status === 'Confirmed' ? 'success' : 'warning'">
+              {{ scan.status }}
+            </ion-badge>
+          </ion-item>
+        </ion-list>
+        
+        <div *ngIf="scanHistory.length === 0" class="empty-history">
+          <ion-icon name="qr-code-outline" class="empty-icon"></ion-icon>
+          <p>No scans yet. Start scanning boarding passes!</p>
+        </div>
+        
+        <div *ngIf="scanHistory.length > 10" class="history-footer">
+          <p>Showing last 10 scans. Total: {{ scanHistory.length }}</p>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+  </div>
+</ion-content> 

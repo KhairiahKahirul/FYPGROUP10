@@ -1,0 +1,183 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Send Notifications</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="notifications-container">
+    
+    <!-- Notification Types Selection -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="notifications-outline"></ion-icon>
+          Select Notification Type
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="notification-types">
+          <ion-button 
+            *ngFor="let type of notificationTypes"
+            [color]="type.color"
+            fill="outline"
+            [class.selected]="selectedNotificationType === type.type"
+            (click)="selectedNotificationType = type.type; onNotificationTypeChange()"
+            class="type-button">
+            <ion-icon [name]="type.icon" slot="start"></ion-icon>
+            {{ type.title }}
+          </ion-button>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Notification Form -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="mail-outline"></ion-icon>
+          Compose Notification
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <form [formGroup]="notificationForm" (ngSubmit)="sendNotification()">
+          
+          <!-- Notification Type -->
+          <ion-item>
+            <ion-label position="floating">Notification Type *</ion-label>
+            <ion-select 
+              formControlName="notificationType"
+              placeholder="Select notification type"
+              (ionChange)="onNotificationTypeChange()">
+              <ion-select-option 
+                *ngFor="let type of notificationTypes"
+                [value]="type.type">
+                {{ type.title }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <!-- Recipients -->
+          <ion-item>
+            <ion-label position="floating">Recipients *</ion-label>
+            <ion-select 
+              formControlName="recipients"
+              placeholder="Select recipients"
+              multiple="true">
+              <ion-select-option 
+                *ngFor="let user of users"
+                [value]="user.name">
+                {{ user.name }} ({{ user.email }})
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <!-- Subject -->
+          <ion-item>
+            <ion-label position="floating">Subject *</ion-label>
+            <ion-input 
+              formControlName="subject" 
+              placeholder="Enter notification subject">
+            </ion-input>
+          </ion-item>
+
+          <!-- Message -->
+          <ion-item>
+            <ion-label position="floating">Message *</ion-label>
+            <ion-textarea 
+              formControlName="message" 
+              placeholder="Enter notification message"
+              rows="4">
+            </ion-textarea>
+          </ion-item>
+
+          <!-- Delivery Channels -->
+          <ion-item-group>
+            <ion-item-divider>
+              <ion-label>Delivery Channels</ion-label>
+            </ion-item-divider>
+            
+            <ion-item>
+              <ion-label>Send Email</ion-label>
+              <ion-checkbox formControlName="sendEmail" slot="end"></ion-checkbox>
+            </ion-item>
+            
+            <ion-item>
+              <ion-label>Send SMS</ion-label>
+              <ion-checkbox formControlName="sendSMS" slot="end"></ion-checkbox>
+            </ion-item>
+            
+            <ion-item>
+              <ion-label>Push Notification</ion-label>
+              <ion-checkbox formControlName="sendPush" slot="end"></ion-checkbox>
+            </ion-item>
+          </ion-item-group>
+
+          <!-- Action Buttons -->
+          <div class="form-actions">
+            <ion-button 
+              type="button" 
+              fill="outline" 
+              (click)="previewNotification()"
+              [disabled]="notificationForm.invalid">
+              <ion-icon name="eye-outline" slot="start"></ion-icon>
+              Preview
+            </ion-button>
+            
+            <ion-button 
+              type="submit" 
+              [disabled]="notificationForm.invalid || isLoading">
+              <ion-spinner *ngIf="isLoading" name="crescent" slot="start"></ion-spinner>
+              <ion-icon *ngIf="!isLoading" name="send-outline" slot="start"></ion-icon>
+              {{ isLoading ? 'Sending...' : 'Send Notification' }}
+            </ion-button>
+          </div>
+        </form>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Recent Notifications -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="time-outline"></ion-icon>
+          Recent Notifications
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list>
+          <ion-item *ngFor="let notification of recentNotifications">
+            <ion-icon 
+              [name]="getNotificationTypeInfo(notification.type)?.icon" 
+              [color]="getNotificationTypeInfo(notification.type)?.color" 
+              slot="start">
+            </ion-icon>
+            <ion-label>
+              <h3>{{ notification.subject }}</h3>
+              <p><strong>To:</strong> {{ notification.recipients }}</p>
+              <p>{{ notification.message }}</p>
+              <p><strong>Sent:</strong> {{ notification.sentAt | date:'short' }}</p>
+              <div class="channels">
+                <ion-badge *ngIf="notification.channels.email" color="primary">Email</ion-badge>
+                <ion-badge *ngIf="notification.channels.sms" color="secondary">SMS</ion-badge>
+                <ion-badge *ngIf="notification.channels.push" color="tertiary">Push</ion-badge>
+              </div>
+            </ion-label>
+            <ion-badge slot="end" color="success">{{ notification.status }}</ion-badge>
+          </ion-item>
+        </ion-list>
+        
+        <div *ngIf="recentNotifications.length === 0" class="empty-state">
+          <ion-icon name="notifications-off-outline" class="empty-icon"></ion-icon>
+          <p>No notifications sent yet</p>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+  </div>
+</ion-content> 

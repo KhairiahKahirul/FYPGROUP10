@@ -1,73 +1,75 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar color="primary">
-    <ion-title>Admin Login</ion-title>
+    <ion-title>Brunei Ferry Ticket Admin</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="showAvailableAccounts()" fill="clear">
+        <ion-icon name="help-circle-outline"></ion-icon>
+        Help
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="login-content">
+<ion-content class="ion-padding">
   <div class="login-container">
     <div class="login-card">
       <div class="login-header">
-        <div class="logo-container">
-          <ion-icon name="boat-outline" class="logo-icon"></ion-icon>
-        </div>
-        <h1>Brunei Ferry Ticket Admin</h1>
-        <p>Sign in to access the admin dashboard</p>
+        <ion-icon name="boat-outline" class="logo-icon"></ion-icon>
+        <h1>Admin Login</h1>
+        <p>Access the ferry management system</p>
       </div>
 
-      <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="login-form">
-        <ion-item class="form-item">
-          <ion-label position="floating">
-            <ion-icon name="person-outline" slot="start"></ion-icon>
-            Username
-          </ion-label>
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <ion-item>
+          <ion-label position="floating">Username</ion-label>
           <ion-input 
             formControlName="username" 
             type="text" 
             placeholder="Enter username"
-            [class.ion-invalid]="username?.invalid && username?.touched"
-            [class.ion-valid]="username?.valid && username?.touched">
+            [clearInput]="true">
           </ion-input>
         </ion-item>
-        
-        <div class="validation-error" *ngIf="username?.invalid && username?.touched">
-          <span *ngIf="username?.errors?.['required']">Username is required</span>
-          <span *ngIf="username?.errors?.['minlength']">Username must be at least 3 characters</span>
+        <div class="validation-error" *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched">
+          <span *ngIf="loginForm.get('username')?.errors?.['required']">Username is required</span>
         </div>
 
-        <ion-item class="form-item">
-          <ion-label position="floating">
-            <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
-            Password
-          </ion-label>
+        <ion-item>
+          <ion-label position="floating">Password</ion-label>
           <ion-input 
             formControlName="password" 
             type="password" 
             placeholder="Enter password"
-            [class.ion-invalid]="password?.invalid && password?.touched"
-            [class.ion-valid]="password?.valid && password?.touched">
+            [clearInput]="true">
           </ion-input>
         </ion-item>
-        
-        <div class="validation-error" *ngIf="password?.invalid && password?.touched">
-          <span *ngIf="password?.errors?.['required']">Password is required</span>
-          <span *ngIf="password?.errors?.['minlength']">Password must be at least 6 characters</span>
+        <div class="validation-error" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+          <span *ngIf="loginForm.get('password')?.errors?.['required']">Password is required</span>
+          <span *ngIf="loginForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters</span>
         </div>
 
-        <ion-button 
-          expand="block" 
-          type="submit" 
-          class="login-button"
-          [disabled]="isLoading || loginForm.invalid">
-          <ion-spinner name="crescent" *ngIf="isLoading"></ion-spinner>
-          <span *ngIf="!isLoading">Sign In</span>
-        </ion-button>
+        <div class="button-group">
+          <ion-button 
+            type="submit" 
+            expand="block" 
+            [disabled]="loginForm.invalid || isLoading"
+            class="login-button">
+            <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
+            <span *ngIf="!isLoading">Login</span>
+          </ion-button>
+
+          <ion-button 
+            type="button" 
+            expand="block" 
+            fill="outline" 
+            (click)="clearForm()"
+            class="clear-button">
+            Clear Form
+          </ion-button>
+        </div>
       </form>
 
-      <div class="demo-credentials">
-        <p><strong>Demo Credentials:</strong></p>
-        <p>Username: <code>admin</code></p>
-        <p>Password: <code>admin123</code></p>
+      <div class="login-footer">
+        <p>Need help? Click the Help button above to see available accounts.</p>
       </div>
     </div>
   </div>

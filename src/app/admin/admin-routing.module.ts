@@ -6,6 +6,9 @@ import { BookingManagementPage } from './booking-management/booking-management.p
 import { UserManagementPage } from './user-management/user-management.page';
 import { FerryManagementPage } from './ferry-management/ferry-management.page';
 import { ReportsPage } from './reports/reports.page';
+import { NotificationsPage } from './notifications/notifications.page';
+import { QrScannerPage } from './qr-scanner/qr-scanner.page';
+import { AdminGuard } from './admin.guard';
 
 const routes: Routes = [
   {
@@ -19,23 +22,38 @@ const routes: Routes = [
   },
   {
     path: 'dashboard',
-    component: AdminDashboardPage
+    component: AdminDashboardPage,
+    canActivate: [AdminGuard]
   },
   {
     path: 'bookings',
-    component: BookingManagementPage
+    component: BookingManagementPage,
+    canActivate: [AdminGuard]
   },
   {
     path: 'users',
-    component: UserManagementPage
+    component: UserManagementPage,
+    canActivate: [AdminGuard]
   },
   {
     path: 'ferries',
-    component: FerryManagementPage
+    component: FerryManagementPage,
+    canActivate: [AdminGuard]
   },
   {
     path: 'reports',
-    component: ReportsPage
+    component: ReportsPage,
+    canActivate: [AdminGuard]
+  },
+  {
+    path: 'notifications',
+    component: NotificationsPage,
+    canActivate: [AdminGuard]
+  },
+  {
+    path: 'qr-scanner',
+    component: QrScannerPage,
+    canActivate: [AdminGuard]
   }
 ];
 

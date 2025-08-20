@@ -1,87 +1,108 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AlertController, LoadingController } from '@ionic/angular';
+import { Router } from '@angular/router';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-admin-login',
   templateUrl: './admin-login.page.html',
   styleUrls: ['./admin-login.page.scss'],
-  standalone: false,
+  standalone: false
 })
 export class AdminLoginPage {
   loginForm: FormGroup;
   isLoading = false;
+  
+  // Admin accounts
+  adminAccounts = [
+    {
+      username: 'admin1',
+      password: 'admin123',
+      name: 'Admin One',
+      role: 'admin1'
+    },
+    {
+      username: 'admin2', 
+      password: 'admin456',
+      name: 'Admin Two',
+      role: 'admin2'
+    }
+  ];
 
   constructor(
-    private router: Router,
     private formBuilder: FormBuilder,
-    private alertController: AlertController,
-    private loadingController: LoadingController
+    private router: Router,
+    private alertController: AlertController
   ) {
     this.loginForm = this.formBuilder.group({
-      username: ['', [Validators.required, Validators.minLength(3)]],
+      username: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
 
-  async onLogin() {
+  async onSubmit() {
     if (this.loginForm.valid) {
       this.isLoading = true;
       
-      const loading = await this.loadingController.create({
-        message: 'Logging in...',
-        spinner: 'crescent'
-      });
-      await loading.present();
-
-      // Simulate API call
-      setTimeout(async () => {
-        const { username, password } = this.loginForm.value;
+      const { username, password } = this.loginForm.value;
+      
+      // Simulate authentication delay
+      setTimeout(() => {
+        const admin = this.authenticateAdmin(username, password);
         
-        // Simple authentication (replace with real API call)
-        if (username === 'admin' && password === 'admin123') {
-          await loading.dismiss();
-          this.isLoading = false;
+        if (admin) {
+          // Store admin session
+          localStorage.setItem('isAdminLoggedIn', 'true');
+          localStorage.setItem('adminUser', JSON.stringify(admin));
           
-          // Store admin session (replace with real token storage)
-          localStorage.setItem('adminLoggedIn', 'true');
-          localStorage.setItem('adminUsername', username);
-          
+          // Navigate to dashboard
           this.router.navigate(['/admin/dashboard']);
         } else {
-          await loading.dismiss();
-          this.isLoading = false;
-          this.showErrorAlert('Invalid credentials. Please try again.');
+          this.showLoginError();
         }
-      }, 1500);
+        
+        this.isLoading = false;
+      }, 1000);
     } else {
-      this.markFormGroupTouched();
+      this.showLoginError();
     }
   }
 
-  private markFormGroupTouched() {
-    Object.keys(this.loginForm.controls).forEach(key => {
-      const control = this.loginForm.get(key);
-      control?.markAsTouched();
-    });
+  private authenticateAdmin(username: string, password: string): any {
+    return this.adminAccounts.find(account => 
+      account.username === username && account.password === password
+    );
   }
 
-  private async showErrorAlert(message: string) {
+  private async showLoginError() {
     const alert = await this.alertController.create({
       header: 'Login Failed',
-      message: message,
-      buttons: ['OK'],
-      cssClass: 'error-alert'
+      message: 'Invalid username or password. Please try again.',
+      buttons: ['OK']
     });
     await alert.present();
   }
 
-  get username() {
-    return this.loginForm.get('username');
+  async showAvailableAccounts() {
+    const alert = await this.alertController.create({
+      header: 'Available Admin Accounts',
+      message: `
+        <div style="text-align: left;">
+          <p><strong>Admin 1:</strong></p>
+          <p>Username: admin1</p>
+          <p>Password: admin123</p>
+          <br>
+          <p><strong>Admin 2:</strong></p>
+          <p>Username: admin2</p>
+          <p>Password: admin456</p>
+        </div>
+      `,
+      buttons: ['OK']
+    });
+    await alert.present();
   }
 
-  get password() {
-    return this.loginForm.get('password');
+  clearForm() {
+    this.loginForm.reset();
   }
 } 
